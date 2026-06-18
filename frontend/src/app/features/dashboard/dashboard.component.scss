@@ -1,0 +1,30 @@
+.dashboard {
+  min-height: 100vh;
+  padding: 2rem;
+  background: var(--surface-bg);
+  color: var(--text-primary);
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.75rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+}
+
+.placeholder {
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px dashed var(--border-subtle);
+  color: var(--text-muted);
+}

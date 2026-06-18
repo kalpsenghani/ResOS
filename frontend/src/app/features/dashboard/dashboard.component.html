@@ -1,0 +1,13 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Welcome, {{ user()?.firstName }} — {{ tenant()?.name }}</p>
+    </div>
+    <button mat-stroked-button type="button" (click)="logout()">Sign out</button>
+  </header>
+
+  <section class="placeholder">
+    <p>Phase 4 will add KPI widgets, navigation, and analytics here.</p>
+  </section>
+</div>

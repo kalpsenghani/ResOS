@@ -9,6 +9,7 @@ import com.resos.modules.user.dto.UpdateUserRequest;
 import com.resos.modules.user.dto.UserResponse;
 import com.resos.modules.user.repository.RoleRepository;
 import com.resos.modules.user.repository.UserRepository;
+import com.resos.shared.tenant.TenantContextHolder;
 import com.resos.shared.exception.BusinessException;
 import com.resos.shared.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<UserResponse> listUsers(UUID tenantId, Pageable pageable) {
-        return userRepository.findByTenantIdAndDeletedAtIsNull(tenantId, pageable)
+        return userRepository.findByTenant_IdAndDeletedAtIsNull(tenantId, pageable)
                 .map(userMapper::toResponse);
     }
 
@@ -47,11 +48,11 @@ public class UserService {
     @Transactional
     public UserResponse createUser(CreateUserRequest request, UserPrincipal principal) {
         UUID tenantId = requireTenantId(principal);
-        if (userRepository.existsByEmailAndTenantIdAndDeletedAtIsNull(request.email().toLowerCase(), tenantId)) {
+        if (userRepository.existsByEmailAndTenant_IdAndDeletedAtIsNull(request.email().toLowerCase(), tenantId)) {
             throw new BusinessException("DUPLICATE_RESOURCE", "A user with this email already exists");
         }
 
-        Role role = roleRepository.findByNameAndTenantId(request.role(), tenantId)
+        Role role = roleRepository.findByNameAndTenant_Id(request.role(), tenantId)
                 .orElseThrow(() -> new BusinessException("VALIDATION_ERROR", "Invalid role: " + request.role()));
 
         User user = User.builder()
@@ -90,7 +91,7 @@ public class UserService {
         }
         if (request.role() != null) {
             UUID tenantId = requireTenantId(principal);
-            Role role = roleRepository.findByNameAndTenantId(request.role(), tenantId)
+            Role role = roleRepository.findByNameAndTenant_Id(request.role(), tenantId)
                     .orElseThrow(() -> new BusinessException("VALIDATION_ERROR", "Invalid role"));
             user.setRoles(Set.of(role));
         }
@@ -118,8 +119,10 @@ public class UserService {
     }
 
     private User findUserOrThrow(UUID userId) {
+        UUID tenantId = TenantContextHolder.getTenantId();
         return userRepository.findByIdWithRoles(userId)
                 .filter(u -> u.getDeletedAt() == null)
+                .filter(u -> tenantId == null || (u.getTenant() != null && tenantId.equals(u.getTenant().getId())))
                 .orElseThrow(() -> new BusinessException("NOT_FOUND", "User not found"));
     }
 

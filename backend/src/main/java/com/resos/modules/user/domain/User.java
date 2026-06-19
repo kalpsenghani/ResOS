@@ -1,8 +1,12 @@
 package com.resos.modules.user.domain;
 
+import com.resos.shared.tenant.TenantAware;
 import com.resos.modules.tenant.domain.Tenant;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -11,12 +15,14 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
+@FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = UUID.class))
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements TenantAware {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -94,5 +100,10 @@ public class User {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public UUID getTenantId() {
+        return tenant != null ? tenant.getId() : null;
     }
 }

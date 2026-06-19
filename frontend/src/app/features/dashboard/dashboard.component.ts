@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthActions } from '../../store/auth/auth.actions';
@@ -6,7 +7,7 @@ import { authFeature } from '../../store/auth/auth.reducer';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })

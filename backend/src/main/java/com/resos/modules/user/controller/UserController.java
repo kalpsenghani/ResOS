@@ -3,6 +3,7 @@ package com.resos.modules.user.controller;
 import com.resos.modules.user.dto.CreateUserRequest;
 import com.resos.modules.user.dto.UpdateUserRequest;
 import com.resos.modules.user.dto.UserResponse;
+import com.resos.shared.tenant.TenantContextHolder;
 import com.resos.modules.user.service.UserService;
 import com.resos.shared.api.ApiResponse;
 import com.resos.shared.security.UserPrincipal;
@@ -32,7 +33,7 @@ public class UserController {
             @AuthenticationPrincipal UserPrincipal principal,
             @PageableDefault(size = 20) Pageable pageable) {
 
-        Page<UserResponse> users = userService.listUsers(principal.getTenantId(), pageable);
+        Page<UserResponse> users = userService.listUsers(TenantContextHolder.requireTenantId(), pageable);
         return ResponseEntity.ok(ApiResponse.of(users));
     }
 

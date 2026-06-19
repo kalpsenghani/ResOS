@@ -12,6 +12,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
+  {
+    path: 'settings',
+    loadChildren: () => import('./features/settings/settings.routes').then((m) => m.settingsRoutes),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
   { path: '**', redirectTo: 'auth/login' },
 ];

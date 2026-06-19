@@ -13,7 +13,7 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
 
     Optional<Role> findByNameAndTenantIsNull(String name);
 
-    Optional<Role> findByNameAndTenantId(String name, UUID tenantId);
+    Optional<Role> findByNameAndTenant_Id(String name, UUID tenantId);
 
     @Query("""
             SELECT r FROM Role r
@@ -22,5 +22,5 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
             """)
     Optional<Role> findByNameAndTenantIdWithPermissions(@Param("name") String name, @Param("tenantId") UUID tenantId);
 
-    List<Role> findByTenantId(UUID tenantId);
+    List<Role> findByTenant_Id(UUID tenantId);
 }

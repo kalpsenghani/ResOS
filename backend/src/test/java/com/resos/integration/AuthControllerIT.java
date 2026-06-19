@@ -62,10 +62,12 @@ class AuthControllerIT {
 
         JsonNode loginJson = objectMapper.readTree(loginResult.getResponse().getContentAsString());
         String accessToken = loginJson.get("data").get("accessToken").asText();
+        String tenantId = loginJson.get("data").get("tenant").get("id").asText();
         String refreshToken = loginResult.getResponse().getCookie("refreshToken").getValue();
 
         mockMvc.perform(get("/api/v1/auth/me")
-                        .header("Authorization", "Bearer " + accessToken))
+                        .header("Authorization", "Bearer " + accessToken)
+                        .header("X-Tenant-ID", tenantId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.email").value("owner@joespizza.com"));
 

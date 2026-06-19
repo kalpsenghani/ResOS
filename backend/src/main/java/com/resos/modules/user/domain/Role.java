@@ -1,8 +1,10 @@
 package com.resos.modules.user.domain;
 
 import com.resos.modules.tenant.domain.Tenant;
+import com.resos.shared.tenant.TenantAware;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Filter;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -11,12 +13,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "roles")
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class Role implements TenantAware {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -47,4 +50,9 @@ public class Role {
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private Instant createdAt = Instant.now();
+
+    @Override
+    public UUID getTenantId() {
+        return tenant != null ? tenant.getId() : null;
+    }
 }

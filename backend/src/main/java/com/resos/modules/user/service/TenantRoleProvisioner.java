@@ -73,6 +73,6 @@ public class TenantRoleProvisioner {
     }
 
     public List<Role> getTenantRoles(Tenant tenant) {
-        return roleRepository.findByTenantId(tenant.getId());
+        return roleRepository.findByTenant_Id(tenant.getId());
     }
 }

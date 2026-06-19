@@ -4,7 +4,10 @@
       <h1>Dashboard</h1>
       <p>Welcome, {{ user()?.firstName }} — {{ tenant()?.name }}</p>
     </div>
-    <button mat-stroked-button type="button" (click)="logout()">Sign out</button>
+    <div class="dashboard-actions">
+      <a mat-stroked-button routerLink="/settings">Settings</a>
+      <button mat-stroked-button type="button" (click)="logout()">Sign out</button>
+    </div>
   </header>
 
   <section class="placeholder">

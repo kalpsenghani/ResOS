@@ -1,20 +1,23 @@
 package com.resos.modules.subscription.domain;
 
 import com.resos.modules.tenant.domain.Tenant;
+import com.resos.shared.tenant.TenantAware;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Filter;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "subscriptions")
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Subscription {
+public class Subscription implements TenantAware {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -53,5 +56,10 @@ public class Subscription {
     @PreUpdate
     void onUpdate() {
         updatedAt = Instant.now();
+    }
+
+    @Override
+    public UUID getTenantId() {
+        return tenant != null ? tenant.getId() : null;
     }
 }

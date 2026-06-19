@@ -1,16 +1,16 @@
 package com.resos.modules.user.repository;
 
 import com.resos.modules.user.domain.User;
+import com.resos.shared.tenant.TenantAwareRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends TenantAwareRepository<User, UUID> {
 
     @Query("""
             SELECT u FROM User u
@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             """)
     Optional<User> findPlatformUserByEmail(@Param("email") String email);
 
-    Page<User> findByTenantIdAndDeletedAtIsNull(UUID tenantId, Pageable pageable);
+    Page<User> findByTenant_IdAndDeletedAtIsNull(UUID tenantId, Pageable pageable);
 
-    boolean existsByEmailAndTenantIdAndDeletedAtIsNull(String email, UUID tenantId);
+    boolean existsByEmailAndTenant_IdAndDeletedAtIsNull(String email, UUID tenantId);
 }

@@ -1,16 +1,76 @@
-<div class="dashboard">
-  <header class="dashboard-header">
-    <div>
-      <h1>Dashboard</h1>
-      <p>Welcome, {{ user()?.firstName }} — {{ tenant()?.name }}</p>
-    </div>
-    <div class="dashboard-actions">
-      <a mat-stroked-button routerLink="/settings">Settings</a>
-      <button mat-stroked-button type="button" (click)="logout()">Sign out</button>
-    </div>
-  </header>
+<app-page-header
+  title="Dashboard"
+  [subtitle]="restaurantName() ? 'Overview for ' + restaurantName() : 'Restaurant overview'"
+  [breadcrumbs]="['Home', 'Dashboard']"
+/>
 
-  <section class="placeholder">
-    <p>Phase 4 will add KPI widgets, navigation, and analytics here.</p>
+@if (loading()) {
+  <app-loading-spinner message="Loading dashboard..." />
+} @else if (error()) {
+  <app-empty-state icon="error_outline" title="Unable to load dashboard" [message]="error()!" />
+} @else if (kpis(); as data) {
+  <section class="kpi-grid">
+    <app-kpi-widget
+      label="Revenue"
+      [value]="data.revenue.value"
+      [change]="data.revenue.change"
+      [trend]="data.revenue.trend"
+      format="currency"
+      icon="payments"
+    />
+    <app-kpi-widget
+      label="Orders"
+      [value]="data.orders.value"
+      [change]="data.orders.change"
+      [trend]="data.orders.trend"
+      icon="receipt_long"
+    />
+    <app-kpi-widget
+      label="Reservations"
+      [value]="data.reservations.value"
+      [change]="data.reservations.change"
+      [trend]="data.reservations.trend"
+      icon="event_seat"
+    />
+    <app-kpi-widget
+      label="Low Stock"
+      [value]="data.lowStockItems.value"
+      [change]="data.lowStockItems.change"
+      [trend]="data.lowStockItems.trend"
+      icon="inventory_2"
+    />
+    <app-kpi-widget
+      label="Active Staff"
+      [value]="data.activeEmployees.value"
+      [change]="data.activeEmployees.change"
+      [trend]="data.activeEmployees.trend"
+      icon="groups"
+    />
+    <app-kpi-widget
+      label="Avg Order Value"
+      [value]="data.avgOrderValue.value"
+      [change]="data.avgOrderValue.change"
+      [trend]="data.avgOrderValue.trend"
+      format="currency"
+      icon="trending_up"
+    />
   </section>
-</div>
+
+  <section class="dashboard-grid">
+    <app-card title="Revenue trend" subtitle="Last 7 days">
+      <app-revenue-chart [chart]="revenueChart()" />
+    </app-card>
+
+    <app-card title="Recent orders" subtitle="Latest activity">
+      @if (recentOrders().length) {
+        <app-data-table [columns]="orderColumns" [rows]="$any(recentOrders())" />
+      } @else {
+        <app-empty-state
+          icon="receipt_long"
+          title="No orders yet"
+          message="Orders will appear here once the menu and ordering modules are enabled."
+        />
+      }
+    </app-card>
+  </section>
+}

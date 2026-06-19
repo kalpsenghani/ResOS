@@ -360,7 +360,7 @@ flowchart TD
 | Phase 1 — Architecture | **COMPLETE — Awaiting Review** | All docs in `/docs/` |
 | Phase 2 — Auth | Blocked | Waiting for Phase 1 approval |
 | Phase 3 — Multi-Tenant | Blocked | — |
-| Phase 4 — Dashboard | Blocked | — |
+| Phase 4 — Dashboard | Complete | Awaiting review |
 | Phase 5 — Inventory | Blocked | — |
 | Phase 6 — Employees | Blocked | — |
 | Phase 7 — Reservations | Blocked | — |

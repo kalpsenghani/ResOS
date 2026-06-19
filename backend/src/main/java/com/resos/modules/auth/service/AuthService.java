@@ -4,6 +4,7 @@ import com.resos.modules.auth.dto.AuthResponse;
 import com.resos.modules.auth.dto.LoginRequest;
 import com.resos.modules.auth.dto.RegisterRequest;
 import com.resos.modules.auth.domain.RefreshToken;
+import com.resos.modules.restaurant.service.RestaurantService;
 import com.resos.modules.subscription.domain.Subscription;
 import com.resos.modules.subscription.domain.SubscriptionPlan;
 import com.resos.modules.subscription.domain.SubscriptionStatus;
@@ -43,6 +44,7 @@ public class AuthService {
     private final SubscriptionPlanRepository subscriptionPlanRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final TenantRoleProvisioner tenantRoleProvisioner;
+    private final RestaurantService restaurantService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
@@ -73,6 +75,8 @@ public class AuthService {
                 .status(SubscriptionStatus.TRIAL)
                 .trialEndsAt(Instant.now().plus(14, ChronoUnit.DAYS))
                 .build());
+
+        restaurantService.createDefaultRestaurant(tenant.getId(), tenant.getName());
 
         User user = userRepository.save(User.builder()
                 .tenant(tenant)

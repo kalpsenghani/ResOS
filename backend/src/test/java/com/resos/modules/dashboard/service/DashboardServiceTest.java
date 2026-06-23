@@ -2,6 +2,7 @@ package com.resos.modules.dashboard.service;
 
 import com.resos.modules.dashboard.dto.DashboardKpiResponse;
 import com.resos.modules.dashboard.dto.KpiMetric;
+import com.resos.modules.inventory.repository.InventoryItemRepository;
 import com.resos.modules.restaurant.domain.Restaurant;
 import com.resos.modules.restaurant.repository.RestaurantRepository;
 import com.resos.shared.exception.BusinessException;
@@ -28,6 +29,9 @@ class DashboardServiceTest {
     @Mock
     private RestaurantRepository restaurantRepository;
 
+    @Mock
+    private InventoryItemRepository inventoryItemRepository;
+
     @InjectMocks
     private DashboardService dashboardService;
 
@@ -48,12 +52,13 @@ class DashboardServiceTest {
     void getKpisReturnsZeroMetricsWhenOperationalDataUnavailable() {
         when(restaurantRepository.findByIdAndTenantIdAndDeletedAtIsNull(restaurantId, tenantId))
                 .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).tenantId(tenantId).name("Test").address("A").build()));
+        when(inventoryItemRepository.countLowStockByRestaurant(tenantId, restaurantId)).thenReturn(3L);
 
         DashboardKpiResponse response = dashboardService.getKpis(restaurantId, "WEEK");
 
         assertThat(response.revenue().value()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(response.revenue().trend()).isEqualTo(KpiMetric.Trend.FLAT);
-        assertThat(response.orders().value()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(response.lowStockItems().value()).isEqualByComparingTo(BigDecimal.valueOf(3));
     }
 
     @Test

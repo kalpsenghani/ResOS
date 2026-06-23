@@ -361,7 +361,7 @@ flowchart TD
 | Phase 2 — Auth | Blocked | Waiting for Phase 1 approval |
 | Phase 3 — Multi-Tenant | Blocked | — |
 | Phase 4 — Dashboard | Complete | Awaiting review |
-| Phase 5 — Inventory | Blocked | — |
+| Phase 5 — Inventory | Complete | Awaiting review |
 | Phase 6 — Employees | Blocked | — |
 | Phase 7 — Reservations | Blocked | — |
 | Phase 8 — Menu & Orders | Blocked | — |

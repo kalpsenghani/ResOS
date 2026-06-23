@@ -4,6 +4,7 @@ import com.resos.modules.dashboard.dto.DashboardKpiResponse;
 import com.resos.modules.dashboard.dto.KpiMetric;
 import com.resos.modules.dashboard.dto.RecentOrderResponse;
 import com.resos.modules.dashboard.dto.RevenueChartResponse;
+import com.resos.modules.inventory.repository.InventoryItemRepository;
 import com.resos.modules.restaurant.repository.RestaurantRepository;
 import com.resos.shared.exception.BusinessException;
 import com.resos.shared.tenant.TenantContextHolder;
@@ -24,16 +25,19 @@ import java.util.UUID;
 public class DashboardService {
 
     private final RestaurantRepository restaurantRepository;
+    private final InventoryItemRepository inventoryItemRepository;
 
     @Transactional(readOnly = true)
     public DashboardKpiResponse getKpis(UUID restaurantId, String period) {
         validateRestaurantAccess(restaurantId);
-        // Operational modules (orders, inventory, employees) arrive in later phases.
+        long lowStockCount = inventoryItemRepository.countLowStockByRestaurant(
+                TenantContextHolder.requireTenantId(), restaurantId);
+
         return new DashboardKpiResponse(
                 metric(BigDecimal.ZERO),
                 metric(BigDecimal.ZERO),
                 metric(BigDecimal.ZERO),
-                metric(BigDecimal.ZERO),
+                metric(BigDecimal.valueOf(lowStockCount)),
                 metric(BigDecimal.ZERO),
                 metric(BigDecimal.ZERO)
         );

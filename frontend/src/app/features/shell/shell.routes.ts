@@ -17,14 +17,7 @@ export const appShellRoutes: Routes = [
       },
       {
         path: 'inventory',
-        loadComponent: () =>
-          import('../placeholder/feature-placeholder.component').then((m) => m.FeaturePlaceholderComponent),
-        data: {
-          title: 'Inventory',
-          icon: 'inventory_2',
-          subtitle: 'Stock management',
-          message: 'Track ingredients and supplies — coming in Phase 5.',
-        },
+        loadChildren: () => import('../inventory/inventory.routes').then((m) => m.inventoryRoutes),
       },
       {
         path: 'employees',

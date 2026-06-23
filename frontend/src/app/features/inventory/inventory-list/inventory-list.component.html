@@ -1,0 +1,104 @@
+<app-page-header title="Inventory" subtitle="Track stock levels, transactions, and alerts">
+  <app-button pageActions icon="add" (clicked)="openCreateDialog()">Add item</app-button>
+</app-page-header>
+
+@if (error()) {
+  <app-empty-state icon="error_outline" title="Unable to load inventory" [message]="error()!" />
+} @else {
+  <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Items">
+      <div class="tab-content">
+        <div class="filters">
+          <mat-form-field appearance="outline" class="search">
+            <mat-label>Search items</mat-label>
+            <input matInput [formControl]="searchControl" placeholder="Name or SKU" />
+          </mat-form-field>
+          <mat-checkbox [checked]="lowStockOnly()" (change)="toggleLowStock($event.checked)">
+            Low stock only
+          </mat-checkbox>
+        </div>
+
+        @if (loading()) {
+          <app-loading-spinner message="Loading inventory..." />
+        } @else if (items().length) {
+          <app-card>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Min</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of items(); track item.id) {
+                    <tr>
+                      <td>
+                        <strong>{{ item.name }}</strong>
+                        @if (item.sku) {
+                          <span class="sku">{{ item.sku }}</span>
+                        }
+                      </td>
+                      <td>{{ item.category || '—' }}</td>
+                      <td>{{ item.currentStock | number: '1.0-2' }} {{ item.unit }}</td>
+                      <td>{{ item.minimumStock | number: '1.0-2' }}</td>
+                      <td>
+                        @if (item.isLowStock) {
+                          <app-status-badge label="Low stock" variant="warning" />
+                        } @else {
+                          <app-status-badge label="OK" variant="success" />
+                        }
+                      </td>
+                      <td>
+                        <app-button variant="ghost" (clicked)="openEditDialog(item)">Edit</app-button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </app-card>
+        } @else {
+          <app-empty-state
+            icon="inventory_2"
+            title="No inventory items"
+            message="Add your first ingredient or supply item to start tracking stock."
+          >
+            <app-button icon="add" (clicked)="openCreateDialog()">Add item</app-button>
+          </app-empty-state>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab [label]="'Alerts (' + alerts().length + ')'">
+      <div class="tab-content">
+        @if (alerts().length) {
+          <div class="alerts">
+            @for (alert of alerts(); track alert.id) {
+              <app-card [flat]="true">
+                <div class="alert-row">
+                  <div>
+                    <app-status-badge [label]="alert.alertType" [variant]="alertVariant(alert.alertType)" />
+                    <strong>{{ alert.itemName }}</strong>
+                    <p>{{ alert.message }}</p>
+                  </div>
+                  <app-button variant="secondary" (clicked)="acknowledgeAlert(alert)">Acknowledge</app-button>
+                </div>
+              </app-card>
+            }
+          </div>
+        } @else {
+          <app-empty-state
+            icon="notifications_none"
+            title="No active alerts"
+            message="Stock alerts appear when items fall below minimum levels."
+          />
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+}

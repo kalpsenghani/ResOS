@@ -25,14 +25,7 @@ export const appShellRoutes: Routes = [
       },
       {
         path: 'reservations',
-        loadComponent: () =>
-          import('../placeholder/feature-placeholder.component').then((m) => m.FeaturePlaceholderComponent),
-        data: {
-          title: 'Reservations',
-          icon: 'event_seat',
-          subtitle: 'Table bookings',
-          message: 'Reservation calendar and table management — coming in Phase 7.',
-        },
+        loadChildren: () => import('../reservations/reservations.routes').then((m) => m.reservationsRoutes),
       },
       {
         path: 'menu',

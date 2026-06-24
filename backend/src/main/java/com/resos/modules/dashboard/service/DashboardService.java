@@ -7,6 +7,7 @@ import com.resos.modules.dashboard.dto.RevenueChartResponse;
 import com.resos.modules.employee.domain.EmployeeStatus;
 import com.resos.modules.employee.repository.EmployeeRepository;
 import com.resos.modules.inventory.repository.InventoryItemRepository;
+import com.resos.modules.reservation.service.ReservationService;
 import com.resos.modules.restaurant.repository.RestaurantRepository;
 import com.resos.shared.exception.BusinessException;
 import com.resos.shared.tenant.TenantContextHolder;
@@ -29,6 +30,7 @@ public class DashboardService {
     private final RestaurantRepository restaurantRepository;
     private final InventoryItemRepository inventoryItemRepository;
     private final EmployeeRepository employeeRepository;
+    private final ReservationService reservationService;
 
     @Transactional(readOnly = true)
     public DashboardKpiResponse getKpis(UUID restaurantId, String period) {
@@ -37,11 +39,12 @@ public class DashboardService {
                 TenantContextHolder.requireTenantId(), restaurantId);
         long activeEmployees = employeeRepository.countByTenantIdAndRestaurantIdAndStatusAndDeletedAtIsNull(
                 TenantContextHolder.requireTenantId(), restaurantId, EmployeeStatus.ACTIVE);
+        long todayReservations = reservationService.countTodayReservations(restaurantId);
 
         return new DashboardKpiResponse(
                 metric(BigDecimal.ZERO),
                 metric(BigDecimal.ZERO),
-                metric(BigDecimal.ZERO),
+                metric(BigDecimal.valueOf(todayReservations)),
                 metric(BigDecimal.valueOf(lowStockCount)),
                 metric(BigDecimal.valueOf(activeEmployees)),
                 metric(BigDecimal.ZERO)

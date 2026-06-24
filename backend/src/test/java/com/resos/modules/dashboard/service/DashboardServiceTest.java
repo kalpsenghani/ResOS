@@ -4,6 +4,7 @@ import com.resos.modules.dashboard.dto.DashboardKpiResponse;
 import com.resos.modules.dashboard.dto.KpiMetric;
 import com.resos.modules.employee.repository.EmployeeRepository;
 import com.resos.modules.inventory.repository.InventoryItemRepository;
+import com.resos.modules.reservation.service.ReservationService;
 import com.resos.modules.restaurant.domain.Restaurant;
 import com.resos.modules.restaurant.repository.RestaurantRepository;
 import com.resos.shared.exception.BusinessException;
@@ -36,6 +37,9 @@ class DashboardServiceTest {
     @Mock
     private EmployeeRepository employeeRepository;
 
+    @Mock
+    private ReservationService reservationService;
+
     @InjectMocks
     private DashboardService dashboardService;
 
@@ -59,11 +63,13 @@ class DashboardServiceTest {
         when(inventoryItemRepository.countLowStockByRestaurant(tenantId, restaurantId)).thenReturn(3L);
         when(employeeRepository.countByTenantIdAndRestaurantIdAndStatusAndDeletedAtIsNull(
                 tenantId, restaurantId, com.resos.modules.employee.domain.EmployeeStatus.ACTIVE)).thenReturn(5L);
+        when(reservationService.countTodayReservations(restaurantId)).thenReturn(8L);
 
         DashboardKpiResponse response = dashboardService.getKpis(restaurantId, "WEEK");
 
         assertThat(response.revenue().value()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(response.revenue().trend()).isEqualTo(KpiMetric.Trend.FLAT);
+        assertThat(response.reservations().value()).isEqualByComparingTo(BigDecimal.valueOf(8));
         assertThat(response.lowStockItems().value()).isEqualByComparingTo(BigDecimal.valueOf(3));
         assertThat(response.activeEmployees().value()).isEqualByComparingTo(BigDecimal.valueOf(5));
     }

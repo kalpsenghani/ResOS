@@ -1,0 +1,169 @@
+<app-page-header title="Reservations" subtitle="Table bookings, calendar, and floor plan">
+  <app-button pageActions icon="event" (clicked)="openCreateReservationDialog()">New booking</app-button>
+</app-page-header>
+
+@if (error()) {
+  <app-empty-state icon="error_outline" title="Unable to load reservations" [message]="error()!" />
+} @else {
+  <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Calendar">
+      <div class="tab-content">
+        <div class="week-nav">
+          <app-button variant="ghost" (clicked)="previousWeek()">Previous</app-button>
+          <span>
+            Week of {{ weekStart() | date: 'mediumDate' }}
+          </span>
+          <app-button variant="ghost" (clicked)="nextWeek()">Next</app-button>
+        </div>
+
+        @if (loading()) {
+          <app-loading-spinner message="Loading calendar..." />
+        } @else {
+          <div class="calendar-grid">
+            @for (day of weekDays(); track day.toISOString()) {
+              <app-card [title]="formatDayTitle(day)">
+                @if (reservationsForDay(day).length) {
+                  <div class="calendar-events">
+                    @for (reservation of reservationsForDay(day); track reservation.id) {
+                      <button type="button" class="calendar-event" (click)="openEditReservationDialog(reservation)">
+                        <strong>{{ reservation.startTime.slice(0, 5) }} · {{ reservation.guestName }}</strong>
+                        <span>
+                          Party of {{ reservation.partySize }}
+                          @if (reservation.tableNumber) {
+                            · {{ reservation.tableNumber }}
+                          }
+                        </span>
+                        <app-status-badge [label]="reservation.status" [variant]="statusVariant(reservation.status)" />
+                      </button>
+                    }
+                  </div>
+                } @else {
+                  <p class="empty-day">No bookings</p>
+                }
+              </app-card>
+            }
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Bookings">
+      <div class="tab-content">
+        @if (loading()) {
+          <app-loading-spinner message="Loading bookings..." />
+        } @else if (reservations().length) {
+          <app-card>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Guest</th>
+                    <th>Party</th>
+                    <th>Table</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (reservation of reservations(); track reservation.id) {
+                    <tr>
+                      <td>
+                        <strong>{{ reservation.reservationDate | date: 'mediumDate' }}</strong>
+                        <span class="meta">{{ reservation.startTime.slice(0, 5) }}</span>
+                      </td>
+                      <td>
+                        <strong>{{ reservation.guestName }}</strong>
+                        @if (reservation.guestPhone) {
+                          <span class="meta">{{ reservation.guestPhone }}</span>
+                        }
+                      </td>
+                      <td>{{ reservation.partySize }}</td>
+                      <td>{{ reservation.tableNumber ?? '—' }}</td>
+                      <td>
+                        <app-status-badge
+                          [label]="reservation.status"
+                          [variant]="statusVariant(reservation.status)"
+                        />
+                      </td>
+                      <td class="actions">
+                        <app-button variant="ghost" (clicked)="openEditReservationDialog(reservation)">Edit</app-button>
+                        @if (reservation.status === 'CONFIRMED') {
+                          <app-button variant="ghost" (clicked)="updateStatus(reservation, 'SEATED')">Seat</app-button>
+                        }
+                        @if (reservation.status !== 'CANCELLED' && reservation.status !== 'COMPLETED') {
+                          <app-button variant="danger" (clicked)="cancelReservation(reservation)">Cancel</app-button>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </app-card>
+        } @else {
+          <app-empty-state
+            icon="event_seat"
+            title="No reservations yet"
+            message="Create your first table booking to populate the calendar."
+          >
+            <app-button icon="event" (clicked)="openCreateReservationDialog()">New booking</app-button>
+          </app-empty-state>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Tables">
+      <div class="tab-content">
+        <div class="tables-header">
+          <app-button icon="add" (clicked)="openCreateTableDialog()">Add table</app-button>
+        </div>
+
+        @if (tables().length) {
+          <app-card>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Table</th>
+                    <th>Capacity</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (table of tables(); track table.id) {
+                    <tr>
+                      <td><strong>{{ table.tableNumber }}</strong></td>
+                      <td>{{ table.capacity }}</td>
+                      <td>{{ table.location ?? '—' }}</td>
+                      <td>
+                        <app-status-badge
+                          [label]="table.active ? 'ACTIVE' : 'INACTIVE'"
+                          [variant]="table.active ? 'success' : 'neutral'"
+                        />
+                      </td>
+                      <td class="actions">
+                        <app-button variant="ghost" (clicked)="openEditTableDialog(table)">Edit</app-button>
+                        <app-button variant="danger" (clicked)="deleteTable(table)">Delete</app-button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </app-card>
+        } @else {
+          <app-empty-state
+            icon="table_restaurant"
+            title="No tables configured"
+            message="Add restaurant tables before accepting reservations."
+          >
+            <app-button icon="add" (clicked)="openCreateTableDialog()">Add table</app-button>
+          </app-empty-state>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+}

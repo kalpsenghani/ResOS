@@ -4,6 +4,8 @@ import com.resos.modules.dashboard.dto.DashboardKpiResponse;
 import com.resos.modules.dashboard.dto.KpiMetric;
 import com.resos.modules.dashboard.dto.RecentOrderResponse;
 import com.resos.modules.dashboard.dto.RevenueChartResponse;
+import com.resos.modules.employee.domain.EmployeeStatus;
+import com.resos.modules.employee.repository.EmployeeRepository;
 import com.resos.modules.inventory.repository.InventoryItemRepository;
 import com.resos.modules.restaurant.repository.RestaurantRepository;
 import com.resos.shared.exception.BusinessException;
@@ -26,19 +28,22 @@ public class DashboardService {
 
     private final RestaurantRepository restaurantRepository;
     private final InventoryItemRepository inventoryItemRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Transactional(readOnly = true)
     public DashboardKpiResponse getKpis(UUID restaurantId, String period) {
         validateRestaurantAccess(restaurantId);
         long lowStockCount = inventoryItemRepository.countLowStockByRestaurant(
                 TenantContextHolder.requireTenantId(), restaurantId);
+        long activeEmployees = employeeRepository.countByTenantIdAndRestaurantIdAndStatusAndDeletedAtIsNull(
+                TenantContextHolder.requireTenantId(), restaurantId, EmployeeStatus.ACTIVE);
 
         return new DashboardKpiResponse(
                 metric(BigDecimal.ZERO),
                 metric(BigDecimal.ZERO),
                 metric(BigDecimal.ZERO),
                 metric(BigDecimal.valueOf(lowStockCount)),
-                metric(BigDecimal.ZERO),
+                metric(BigDecimal.valueOf(activeEmployees)),
                 metric(BigDecimal.ZERO)
         );
     }

@@ -4,7 +4,7 @@ A production-grade, multi-tenant SaaS platform for restaurant operations managem
 
 ## Status
 
-**Phase 5 — Inventory Management: Complete (Awaiting Review)**
+**Phase 6 — Employee Management: Complete (Awaiting Review)**
 
 ## Getting Started
 
@@ -75,6 +75,7 @@ cd ..\frontend; npm run build; npx ng test --watch=false --browsers=ChromeHeadle
 | Phase 3 Test Report | [docs/testing/phase-3-test-report.md](docs/testing/phase-3-test-report.md) |
 | Phase 4 Test Report | [docs/testing/phase-4-test-report.md](docs/testing/phase-4-test-report.md) |
 | Phase 5 Test Report | [docs/testing/phase-5-test-report.md](docs/testing/phase-5-test-report.md) |
+| Phase 6 Test Report | [docs/testing/phase-6-test-report.md](docs/testing/phase-6-test-report.md) |
 
 ## Development Phases
 
@@ -82,8 +83,8 @@ cd ..\frontend; npm run build; npx ng test --watch=false --browsers=ChromeHeadle
 2. **Authentication & Authorization** — Complete
 3. **Multi-Tenant Foundation** — Complete
 4. **Restaurant Dashboard** — Complete
-5. **Inventory Management** — Complete, awaiting review
-6. Employee Management
+5. **Inventory Management** — Complete
+6. **Employee Management** — Complete, awaiting review
 7. Reservation Management
 8. Menu & Order Management
 9. Analytics

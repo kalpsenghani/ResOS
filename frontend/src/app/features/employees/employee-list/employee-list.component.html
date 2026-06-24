@@ -1,0 +1,115 @@
+<app-page-header title="Employees" subtitle="Manage staff profiles and shift schedules">
+  <app-button pageActions icon="person_add" (clicked)="openCreateDialog()">Add employee</app-button>
+</app-page-header>
+
+@if (error()) {
+  <app-empty-state icon="error_outline" title="Unable to load employees" [message]="error()!" />
+} @else {
+  <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Staff">
+      <div class="tab-content">
+        @if (loading()) {
+          <app-loading-spinner message="Loading employees..." />
+        } @else if (employees().length) {
+          <app-card>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Rate</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (employee of employees(); track employee.id) {
+                    <tr>
+                      <td>
+                        <strong>{{ employee.firstName }} {{ employee.lastName }}</strong>
+                        @if (employee.email) {
+                          <span class="meta">{{ employee.email }}</span>
+                        }
+                      </td>
+                      <td>{{ employee.position }}</td>
+                      <td>{{ employee.hourlyRate | currency: 'USD' }}/hr</td>
+                      <td>
+                        <app-status-badge [label]="employee.status" [variant]="statusVariant(employee.status)" />
+                      </td>
+                      <td class="actions">
+                        <app-button variant="ghost" (clicked)="openEditDialog(employee)">Edit</app-button>
+                        <app-button variant="ghost" (clicked)="selectEmployee(employee)">Schedule</app-button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </app-card>
+        } @else {
+          <app-empty-state
+            icon="groups"
+            title="No employees yet"
+            message="Add your first team member to start scheduling shifts."
+          >
+            <app-button icon="person_add" (clicked)="openCreateDialog()">Add employee</app-button>
+          </app-empty-state>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Scheduling">
+      <div class="tab-content">
+        @if (selectedEmployee(); as employee) {
+          <app-card [title]="employee.firstName + ' ' + employee.lastName + ' — Shifts'" [subtitle]="employee.position">
+            <form [formGroup]="scheduleForm" class="schedule-form">
+              <mat-form-field appearance="outline">
+                <mat-label>Shift date</mat-label>
+                <input matInput type="date" formControlName="shiftDate" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Start</mat-label>
+                <input matInput type="time" formControlName="startTime" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>End</mat-label>
+                <input matInput type="time" formControlName="endTime" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Notes</mat-label>
+                <input matInput formControlName="notes" />
+              </mat-form-field>
+              <app-button [disabled]="scheduleForm.invalid" (clicked)="addSchedule()">Add shift</app-button>
+            </form>
+
+            @if (schedules().length) {
+              <div class="schedule-list">
+                @for (schedule of schedules(); track schedule.id) {
+                  <div class="schedule-row">
+                    <div>
+                      <strong>{{ schedule.shiftDate | date: 'mediumDate' }}</strong>
+                      <span>{{ schedule.startTime }} – {{ schedule.endTime }}</span>
+                      @if (schedule.notes) {
+                        <p>{{ schedule.notes }}</p>
+                      }
+                    </div>
+                    <app-button variant="danger" (clicked)="removeSchedule(schedule)">Remove</app-button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="empty-schedules">No shifts scheduled yet.</p>
+            }
+          </app-card>
+        } @else {
+          <app-empty-state
+            icon="event"
+            title="Select an employee"
+            message="Go to the Staff tab and click Schedule on an employee to manage their shifts."
+          />
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+}

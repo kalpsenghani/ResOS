@@ -21,14 +21,7 @@ export const appShellRoutes: Routes = [
       },
       {
         path: 'employees',
-        loadComponent: () =>
-          import('../placeholder/feature-placeholder.component').then((m) => m.FeaturePlaceholderComponent),
-        data: {
-          title: 'Employees',
-          icon: 'groups',
-          subtitle: 'Staff management',
-          message: 'Manage schedules and roles — coming in Phase 6.',
-        },
+        loadChildren: () => import('../employees/employees.routes').then((m) => m.employeesRoutes),
       },
       {
         path: 'reservations',

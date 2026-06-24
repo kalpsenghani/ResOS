@@ -29,25 +29,11 @@ export const appShellRoutes: Routes = [
       },
       {
         path: 'menu',
-        loadComponent: () =>
-          import('../placeholder/feature-placeholder.component').then((m) => m.FeaturePlaceholderComponent),
-        data: {
-          title: 'Menu',
-          icon: 'restaurant_menu',
-          subtitle: 'Menu builder',
-          message: 'Build menus and categories — coming in Phase 8.',
-        },
+        loadChildren: () => import('../menu/menu.routes').then((m) => m.menuRoutes),
       },
       {
         path: 'orders',
-        loadComponent: () =>
-          import('../placeholder/feature-placeholder.component').then((m) => m.FeaturePlaceholderComponent),
-        data: {
-          title: 'Orders',
-          icon: 'receipt_long',
-          subtitle: 'Order management',
-          message: 'Live order queue and history — coming in Phase 8.',
-        },
+        loadChildren: () => import('../orders/orders.routes').then((m) => m.ordersRoutes),
       },
       {
         path: 'analytics',

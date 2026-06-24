@@ -7,6 +7,7 @@ import com.resos.modules.dashboard.dto.RevenueChartResponse;
 import com.resos.modules.employee.domain.EmployeeStatus;
 import com.resos.modules.employee.repository.EmployeeRepository;
 import com.resos.modules.inventory.repository.InventoryItemRepository;
+import com.resos.modules.order.service.OrderService;
 import com.resos.modules.reservation.service.ReservationService;
 import com.resos.modules.restaurant.repository.RestaurantRepository;
 import com.resos.shared.exception.BusinessException;
@@ -16,11 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -31,6 +28,7 @@ public class DashboardService {
     private final InventoryItemRepository inventoryItemRepository;
     private final EmployeeRepository employeeRepository;
     private final ReservationService reservationService;
+    private final OrderService orderService;
 
     @Transactional(readOnly = true)
     public DashboardKpiResponse getKpis(UUID restaurantId, String period) {
@@ -40,37 +38,32 @@ public class DashboardService {
         long activeEmployees = employeeRepository.countByTenantIdAndRestaurantIdAndStatusAndDeletedAtIsNull(
                 TenantContextHolder.requireTenantId(), restaurantId, EmployeeStatus.ACTIVE);
         long todayReservations = reservationService.countTodayReservations(restaurantId);
+        long todayOrders = orderService.countTodayOrders(restaurantId);
+        BigDecimal todayRevenue = orderService.sumTodayRevenue(restaurantId);
+        BigDecimal avgOrderValue = orderService.averageOrderValue(restaurantId);
 
         return new DashboardKpiResponse(
-                metric(BigDecimal.ZERO),
-                metric(BigDecimal.ZERO),
+                metric(todayRevenue),
+                metric(BigDecimal.valueOf(todayOrders)),
                 metric(BigDecimal.valueOf(todayReservations)),
                 metric(BigDecimal.valueOf(lowStockCount)),
                 metric(BigDecimal.valueOf(activeEmployees)),
-                metric(BigDecimal.ZERO)
+                metric(avgOrderValue)
         );
     }
 
     @Transactional(readOnly = true)
     public List<RecentOrderResponse> getRecentOrders(UUID restaurantId, int limit) {
         validateRestaurantAccess(restaurantId);
-        return List.of();
+        return orderService.getRecentOrders(restaurantId, limit);
     }
 
     @Transactional(readOnly = true)
     public RevenueChartResponse getRevenueChart(UUID restaurantId, String period, String groupBy) {
         validateRestaurantAccess(restaurantId);
-        List<String> labels = new ArrayList<>();
-        List<BigDecimal> values = new ArrayList<>();
-
-        LocalDate today = LocalDate.now();
-        for (int i = 6; i >= 0; i--) {
-            LocalDate date = today.minusDays(i);
-            labels.add(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
-            values.add(BigDecimal.ZERO);
-        }
-
-        return new RevenueChartResponse(labels, values);
+        return new RevenueChartResponse(
+                orderService.getDailyRevenueLabels(7),
+                orderService.getDailyRevenue(restaurantId, 7));
     }
 
     private void validateRestaurantAccess(UUID restaurantId) {

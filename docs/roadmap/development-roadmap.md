@@ -364,7 +364,7 @@ flowchart TD
 | Phase 5 — Inventory | Complete | Awaiting review |
 | Phase 6 — Employees | Complete | Awaiting review |
 | Phase 7 — Reservations | Complete | Awaiting review |
-| Phase 8 — Menu & Orders | Blocked | — |
+| Phase 8 — Menu & Orders | Complete | Awaiting review |
 | Phase 9 — Analytics | Blocked | — |
 | Phase 10 — DevOps | Blocked | — |
 

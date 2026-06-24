@@ -4,6 +4,7 @@ import com.resos.modules.dashboard.dto.DashboardKpiResponse;
 import com.resos.modules.dashboard.dto.KpiMetric;
 import com.resos.modules.employee.repository.EmployeeRepository;
 import com.resos.modules.inventory.repository.InventoryItemRepository;
+import com.resos.modules.order.service.OrderService;
 import com.resos.modules.reservation.service.ReservationService;
 import com.resos.modules.restaurant.domain.Restaurant;
 import com.resos.modules.restaurant.repository.RestaurantRepository;
@@ -40,6 +41,9 @@ class DashboardServiceTest {
     @Mock
     private ReservationService reservationService;
 
+    @Mock
+    private OrderService orderService;
+
     @InjectMocks
     private DashboardService dashboardService;
 
@@ -64,14 +68,19 @@ class DashboardServiceTest {
         when(employeeRepository.countByTenantIdAndRestaurantIdAndStatusAndDeletedAtIsNull(
                 tenantId, restaurantId, com.resos.modules.employee.domain.EmployeeStatus.ACTIVE)).thenReturn(5L);
         when(reservationService.countTodayReservations(restaurantId)).thenReturn(8L);
+        when(orderService.countTodayOrders(restaurantId)).thenReturn(12L);
+        when(orderService.sumTodayRevenue(restaurantId)).thenReturn(new BigDecimal("450.00"));
+        when(orderService.averageOrderValue(restaurantId)).thenReturn(new BigDecimal("37.50"));
 
         DashboardKpiResponse response = dashboardService.getKpis(restaurantId, "WEEK");
 
-        assertThat(response.revenue().value()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(response.revenue().value()).isEqualByComparingTo(new BigDecimal("450.00"));
         assertThat(response.revenue().trend()).isEqualTo(KpiMetric.Trend.FLAT);
+        assertThat(response.orders().value()).isEqualByComparingTo(BigDecimal.valueOf(12));
         assertThat(response.reservations().value()).isEqualByComparingTo(BigDecimal.valueOf(8));
         assertThat(response.lowStockItems().value()).isEqualByComparingTo(BigDecimal.valueOf(3));
         assertThat(response.activeEmployees().value()).isEqualByComparingTo(BigDecimal.valueOf(5));
+        assertThat(response.avgOrderValue().value()).isEqualByComparingTo(new BigDecimal("37.50"));
     }
 
     @Test

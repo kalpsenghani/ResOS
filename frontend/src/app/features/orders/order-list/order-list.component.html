@@ -1,0 +1,118 @@
+<app-page-header title="Orders" subtitle="Live queue, kitchen status, and order history">
+  <app-button pageActions icon="add" (clicked)="openCreateDialog()">New order</app-button>
+</app-page-header>
+
+@if (error()) {
+  <app-empty-state icon="error_outline" title="Unable to load orders" [message]="error()!" />
+} @else {
+  <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Kitchen">
+      <div class="tab-content">
+        @if (loading()) {
+          <app-loading-spinner message="Loading kitchen queue..." />
+        } @else if (kitchenOrders().length) {
+          <div class="kitchen-grid">
+            @for (order of kitchenOrders(); track order.id) {
+              <app-card [title]="order.orderNumber" [subtitle]="order.customerName ?? 'Guest'">
+                <div class="order-meta">
+                  <app-status-badge [label]="order.status" [variant]="statusVariant(order.status)" />
+                  <span>{{ order.totalAmount | currency: 'USD' }}</span>
+                </div>
+                <div class="items">
+                  @for (item of order.items; track item.id) {
+                    <div class="item-row">
+                      <div>
+                        <strong>{{ item.quantity }}× {{ item.menuItemName ?? 'Item' }}</strong>
+                        <span>{{ item.status }}</span>
+                      </div>
+                      @if (nextItemStatus(item.status); as nextStatus) {
+                        <app-button variant="ghost" (clicked)="advanceItem(order, item.id, nextStatus)">
+                          Mark {{ nextStatus }}
+                        </app-button>
+                      }
+                    </div>
+                  }
+                </div>
+                <div class="order-actions">
+                  @if (order.status === 'CONFIRMED') {
+                    <app-button (clicked)="advanceOrder(order, 'PREPARING')">Start prep</app-button>
+                  }
+                  @if (order.status === 'PREPARING') {
+                    <app-button (clicked)="advanceOrder(order, 'READY')">Mark ready</app-button>
+                  }
+                  @if (order.status === 'READY') {
+                    <app-button (clicked)="advanceOrder(order, 'SERVED')">Mark served</app-button>
+                  }
+                </div>
+              </app-card>
+            }
+          </div>
+        } @else {
+          <app-empty-state
+            icon="soup_kitchen"
+            title="Kitchen is clear"
+            message="Confirmed and in-progress orders will appear here."
+          />
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="All orders">
+      <div class="tab-content">
+        @if (loading()) {
+          <app-loading-spinner message="Loading orders..." />
+        } @else if (orders().length) {
+          <app-card>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (order of orders(); track order.id) {
+                    <tr>
+                      <td>
+                        <strong>{{ order.orderNumber }}</strong>
+                        <span class="meta">{{ order.createdAt | date: 'short' }}</span>
+                      </td>
+                      <td>{{ order.customerName ?? '—' }}</td>
+                      <td>{{ order.totalAmount | currency: 'USD' }}</td>
+                      <td>
+                        <app-status-badge [label]="order.status" [variant]="statusVariant(order.status)" />
+                      </td>
+                      <td class="actions">
+                        @if (order.status === 'PENDING') {
+                          <app-button variant="ghost" (clicked)="advanceOrder(order, 'CONFIRMED')">Confirm</app-button>
+                        }
+                        @if (order.status === 'SERVED') {
+                          <app-button variant="ghost" (clicked)="advanceOrder(order, 'COMPLETED')">Complete</app-button>
+                        }
+                        @if (order.status !== 'COMPLETED' && order.status !== 'CANCELLED') {
+                          <app-button variant="danger" (clicked)="advanceOrder(order, 'CANCELLED')">Cancel</app-button>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </app-card>
+        } @else {
+          <app-empty-state
+            icon="receipt_long"
+            title="No orders yet"
+            message="Create your first order to start the kitchen queue."
+          >
+            <app-button icon="add" (clicked)="openCreateDialog()">New order</app-button>
+          </app-empty-state>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+}

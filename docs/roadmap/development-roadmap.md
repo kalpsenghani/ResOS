@@ -366,7 +366,7 @@ flowchart TD
 | Phase 7 — Reservations | Complete | Awaiting review |
 | Phase 8 — Menu & Orders | Complete | Awaiting review |
 | Phase 9 — Analytics | Complete | Awaiting review |
-| Phase 10 — DevOps | Blocked | — |
+| Phase 10 — DevOps | **COMPLETE — Awaiting Review** | Docker, CI/CD, deployment docs |
 
 ---
 

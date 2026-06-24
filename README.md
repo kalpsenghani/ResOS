@@ -4,7 +4,7 @@ A production-grade, multi-tenant SaaS platform for restaurant operations managem
 
 ## Status
 
-**Phase 9 — Analytics: Complete (Awaiting Review)**
+**Phase 10 — DevOps & Deployment: Complete (Awaiting Review)**
 
 ## Getting Started
 
@@ -44,7 +44,20 @@ npm start
 
 App available at `http://localhost:4200`
 
-### 4. Run tests
+### 5. Run production stack (optional)
+
+Requires Docker Desktop and a configured `.env` (see `.env.example`):
+
+```powershell
+Copy-Item .env.example .env
+.\scripts\generate-jwt-keys.ps1
+# Paste keys into .env, then:
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+App available at `http://localhost`
+
+### 6. Run tests
 
 ```powershell
 cd backend; .\mvnw.cmd test
@@ -79,6 +92,9 @@ cd ..\frontend; npm run build; npx ng test --watch=false --browsers=ChromeHeadle
 | Phase 7 Test Report | [docs/testing/phase-7-test-report.md](docs/testing/phase-7-test-report.md) |
 | Phase 8 Test Report | [docs/testing/phase-8-test-report.md](docs/testing/phase-8-test-report.md) |
 | Phase 9 Test Report | [docs/testing/phase-9-test-report.md](docs/testing/phase-9-test-report.md) |
+| Phase 10 Test Report | [docs/testing/phase-10-test-report.md](docs/testing/phase-10-test-report.md) |
+| Production Deployment | [docs/deployment/production-deployment-guide.md](docs/deployment/production-deployment-guide.md) |
+| AWS Architecture | [docs/architecture/03-aws-architecture.md](docs/architecture/03-aws-architecture.md) |
 
 ## Development Phases
 
@@ -91,7 +107,7 @@ cd ..\frontend; npm run build; npx ng test --watch=false --browsers=ChromeHeadle
 7. **Reservation Management** — Complete, awaiting review
 8. **Menu & Order Management** — Complete, awaiting review
 9. **Analytics** — Complete, awaiting review
-10. DevOps & Deployment
+10. **DevOps & Deployment** — Complete, awaiting review
 
 ## Getting Started
 

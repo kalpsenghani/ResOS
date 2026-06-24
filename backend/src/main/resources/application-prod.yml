@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    show-sql: false
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+
+logging:
+  level:
+    com.resos: INFO
+    org.springframework.security: WARN
+
+resos:
+  jwt:
+    generate-keys: false
+    private-key: ${RESOS_JWT_PRIVATE_KEY}
+    public-key: ${RESOS_JWT_PUBLIC_KEY}
+  cors:
+    allowed-origins: ${RESOS_CORS_ALLOWED_ORIGINS:http://localhost}

@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+
+    environment {
+        REGISTRY = "${env.DOCKER_REGISTRY ?: 'ghcr.io/resos'}"
+        BACKEND_IMAGE = "${REGISTRY}/resos-backend"
+        FRONTEND_IMAGE = "${REGISTRY}/resos-frontend"
+        GIT_COMMIT_SHORT = "${env.GIT_COMMIT?.take(7) ?: 'local'}"
+    }
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Backend Tests') {
+            steps {
+                dir('backend') {
+                    sh './mvnw test'
+                }
+            }
+        }
+
+        stage('Frontend Tests') {
+            steps {
+                dir('frontend') {
+                    sh 'npm ci'
+                    sh 'npm run build'
+                    sh 'npx ng test --watch=false --browsers=ChromeHeadless --no-progress'
+                }
+            }
+        }
+
+        stage('Build Images') {
+            steps {
+                sh "docker build -f docker/backend/Dockerfile -t ${BACKEND_IMAGE}:${GIT_COMMIT_SHORT} ./backend"
+                sh "docker build -f docker/frontend/Dockerfile -t ${FRONTEND_IMAGE}:${GIT_COMMIT_SHORT} ."
+            }
+        }
+
+        stage('Push Images') {
+            when {
+                branch pattern: '^(main|develop)$', comparator: 'REGEXP'
+            }
+            steps {
+                script {
+                    docker.withRegistry("https://${REGISTRY}", 'docker-registry-credentials') {
+                        sh "docker push ${BACKEND_IMAGE}:${GIT_COMMIT_SHORT}"
+                        sh "docker push ${FRONTEND_IMAGE}:${GIT_COMMIT_SHORT}"
+                        sh "docker tag ${BACKEND_IMAGE}:${GIT_COMMIT_SHORT} ${BACKEND_IMAGE}:latest"
+                        sh "docker tag ${FRONTEND_IMAGE}:${GIT_COMMIT_SHORT} ${FRONTEND_IMAGE}:latest"
+                        sh "docker push ${BACKEND_IMAGE}:latest"
+                        sh "docker push ${FRONTEND_IMAGE}:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                input message: 'Deploy to production?', ok: 'Deploy'
+                sh '''
+                    echo "Deploy resos-backend:${GIT_COMMIT_SHORT} and resos-frontend:${GIT_COMMIT_SHORT}"
+                    echo "Replace with your orchestrator commands (ECS, Kubernetes, etc.)"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check stage logs for details.'
+        }
+        always {
+            cleanWs()
+        }
+    }
+}

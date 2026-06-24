@@ -36,6 +36,7 @@ desktop.ini
 # Docker
 docker/postgres/data/
 docker/redis/data/
+docker/jwt-keys/
 
 # Test / Build artifacts
 *.lcov

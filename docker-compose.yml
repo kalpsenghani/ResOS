@@ -1,3 +1,9 @@
+# Local development infrastructure (PostgreSQL + Redis).
+# Run backend and frontend on the host with mvnw / npm start.
+# For a full containerized dev stack, use: docker compose -f docker-compose.dev.yml up -d
+
+name: resos-dev
+
 services:
   postgres:
     image: postgres:16-alpine

@@ -1,0 +1,173 @@
+<app-page-header title="Analytics" subtitle="Revenue, inventory, labor, and order insights" />
+
+@if (error()) {
+  <app-empty-state icon="error_outline" title="Unable to load analytics" [message]="error()!" />
+} @else if (loading()) {
+  <app-loading-spinner message="Loading analytics..." />
+} @else {
+  <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Revenue">
+      <div class="tab-content">
+        @if (revenue(); as data) {
+          <section class="kpi-grid">
+            <app-kpi-widget
+              label="Total revenue"
+              [value]="data.totalRevenue"
+              [change]="data.changePercent"
+              trend="FLAT"
+              format="currency"
+              icon="payments"
+            />
+            <app-kpi-widget label="Completed orders" [value]="data.orderCount" trend="FLAT" icon="receipt_long" />
+            <app-kpi-widget
+              label="Avg order value"
+              [value]="data.avgOrderValue"
+              trend="FLAT"
+              format="currency"
+              icon="trending_up"
+            />
+          </section>
+          <app-card title="Revenue trend" subtitle="Last 30 days">
+            <app-revenue-chart [chart]="revenueChart()" />
+          </app-card>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Inventory">
+      <div class="tab-content">
+        @if (inventory(); as data) {
+          <section class="kpi-grid">
+            <app-kpi-widget label="Total items" [value]="data.totalItems" trend="FLAT" icon="inventory_2" />
+            <app-kpi-widget label="Low stock" [value]="data.lowStockItems" trend="FLAT" icon="warning" />
+            <app-kpi-widget
+              label="Stock value"
+              [value]="data.inventoryValue"
+              trend="FLAT"
+              format="currency"
+              icon="savings"
+            />
+            <app-kpi-widget
+              label="Waste cost"
+              [value]="data.wasteCost"
+              trend="FLAT"
+              format="currency"
+              icon="delete_outline"
+            />
+          </section>
+          @if (data.topCategories.length) {
+            <app-card title="Top categories" subtitle="By stock value">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Items</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (category of data.topCategories; track category.category) {
+                      <tr>
+                        <td>{{ category.category }}</td>
+                        <td>{{ category.itemCount }}</td>
+                        <td>{{ category.stockValue | currency: 'USD' }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </app-card>
+          }
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Employees">
+      <div class="tab-content">
+        @if (employees(); as data) {
+          <section class="kpi-grid">
+            <app-kpi-widget label="Active staff" [value]="data.activeEmployees" trend="FLAT" icon="groups" />
+            <app-kpi-widget label="Scheduled shifts" [value]="data.scheduledShifts" trend="FLAT" icon="event" />
+            <app-kpi-widget label="Total hours" [value]="data.totalHours" trend="FLAT" icon="schedule" />
+            <app-kpi-widget
+              label="Est. labor cost"
+              [value]="data.estimatedLaborCost"
+              trend="FLAT"
+              format="currency"
+              icon="payments"
+            />
+          </section>
+          @if (data.byPosition.length) {
+            <app-card title="Shifts by position">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Position</th>
+                      <th>Employees</th>
+                      <th>Shifts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of data.byPosition; track row.position) {
+                      <tr>
+                        <td>{{ row.position }}</td>
+                        <td>{{ row.employeeCount }}</td>
+                        <td>{{ row.scheduledShifts }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </app-card>
+          }
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Orders">
+      <div class="tab-content">
+        @if (orders(); as data) {
+          <section class="kpi-grid">
+            <app-kpi-widget label="Total orders" [value]="data.totalOrders" trend="FLAT" icon="receipt_long" />
+            <app-kpi-widget label="Completed" [value]="data.completedOrders" trend="FLAT" icon="check_circle" />
+            <app-kpi-widget
+              label="Avg ticket"
+              [value]="data.avgTicket"
+              trend="FLAT"
+              format="currency"
+              icon="point_of_sale"
+            />
+          </section>
+          <div class="split-grid">
+            @if (data.peakHours.length) {
+              <app-card title="Peak hours" subtitle="Top order volume">
+                <div class="peak-list">
+                  @for (peak of data.peakHours; track peak.hour) {
+                    <div class="peak-row">
+                      <span>{{ formatHour(peak.hour) }}</span>
+                      <strong>{{ peak.orderCount }} orders</strong>
+                    </div>
+                  }
+                </div>
+              </app-card>
+            }
+            @if (data.byStatus.length) {
+              <app-card title="Orders by status">
+                <div class="peak-list">
+                  @for (status of data.byStatus; track status.status) {
+                    <div class="peak-row">
+                      <span>{{ status.status }}</span>
+                      <strong>{{ status.count }}</strong>
+                    </div>
+                  }
+                </div>
+              </app-card>
+            }
+          </div>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+}

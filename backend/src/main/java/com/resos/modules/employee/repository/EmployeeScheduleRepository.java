@@ -14,4 +14,7 @@ public interface EmployeeScheduleRepository extends JpaRepository<EmployeeSchedu
 
     List<EmployeeSchedule> findByEmployeeIdAndTenantIdAndShiftDateBetweenOrderByShiftDateAscStartTimeAsc(
             UUID employeeId, UUID tenantId, LocalDate startDate, LocalDate endDate);
+
+    List<EmployeeSchedule> findByTenantIdAndRestaurantIdAndShiftDateBetween(
+            UUID tenantId, UUID restaurantId, LocalDate startDate, LocalDate endDate);
 }

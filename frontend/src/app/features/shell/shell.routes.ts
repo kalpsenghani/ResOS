@@ -37,14 +37,7 @@ export const appShellRoutes: Routes = [
       },
       {
         path: 'analytics',
-        loadComponent: () =>
-          import('../placeholder/feature-placeholder.component').then((m) => m.FeaturePlaceholderComponent),
-        data: {
-          title: 'Analytics',
-          icon: 'analytics',
-          subtitle: 'Business insights',
-          message: 'Advanced analytics dashboards — coming in Phase 9.',
-        },
+        loadChildren: () => import('../analytics/analytics.routes').then((m) => m.analyticsRoutes),
       },
       {
         path: 'settings',

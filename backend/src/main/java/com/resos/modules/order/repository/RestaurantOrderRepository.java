@@ -47,4 +47,38 @@ public interface RestaurantOrderRepository
 
     long countByTenantIdAndRestaurantIdAndCreatedAtBetween(
             UUID tenantId, UUID restaurantId, Instant start, Instant end);
+
+    long countByTenantIdAndRestaurantIdAndCreatedAtBetweenAndStatus(
+            UUID tenantId, UUID restaurantId, Instant start, Instant end, OrderStatus status);
+
+    @Query(value = """
+            SELECT CAST(EXTRACT(HOUR FROM created_at) AS INTEGER), COUNT(*)
+            FROM orders
+            WHERE tenant_id = :tenantId
+              AND restaurant_id = :restaurantId
+              AND created_at >= :start
+              AND created_at < :end
+            GROUP BY EXTRACT(HOUR FROM created_at)
+            ORDER BY 2 DESC
+            """, nativeQuery = true)
+    List<Object[]> countOrdersGroupedByHour(
+            @Param("tenantId") UUID tenantId,
+            @Param("restaurantId") UUID restaurantId,
+            @Param("start") Instant start,
+            @Param("end") Instant end);
+
+    @Query("""
+            SELECT o.status, COUNT(o)
+            FROM RestaurantOrder o
+            WHERE o.tenantId = :tenantId
+              AND o.restaurantId = :restaurantId
+              AND o.createdAt >= :start
+              AND o.createdAt < :end
+            GROUP BY o.status
+            """)
+    List<Object[]> countOrdersGroupedByStatus(
+            @Param("tenantId") UUID tenantId,
+            @Param("restaurantId") UUID restaurantId,
+            @Param("start") Instant start,
+            @Param("end") Instant end);
 }

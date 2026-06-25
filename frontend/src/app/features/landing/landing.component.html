@@ -1,0 +1,161 @@
+<div class="landing">
+  <header class="landing-nav">
+    <a class="brand" routerLink="/" aria-label="ResOS home">
+      <span class="brand-mark">R</span>
+      <span class="brand-name">ResOS</span>
+    </a>
+
+    <nav class="landing-nav__links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#platform">Platform</a>
+      <a href="#how-it-works">How it works</a>
+    </nav>
+
+    <div class="landing-nav__actions">
+      <button type="button" class="theme-toggle" (click)="theme.toggle()" aria-label="Toggle theme">
+        <mat-icon>{{ theme.mode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+      <a routerLink="/login" class="btn btn-ghost btn-sm">Sign in</a>
+      <a routerLink="/register" class="btn btn-primary btn-sm">Create account</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero__glow hero__glow--1"></div>
+    <div class="hero__glow hero__glow--2"></div>
+
+    <div class="hero__content" motionInView="slide-up">
+      <p class="hero__eyebrow">Restaurant operating system</p>
+      <h1>Run your restaurant with clarity, speed, and confidence.</h1>
+      <p class="hero__lede">
+        ResOS brings orders, reservations, inventory, staff, and analytics into one modern
+        platform built for operators who need control without complexity.
+      </p>
+      <div class="hero__actions">
+        <a routerLink="/register" class="btn btn-primary btn-lg">Start free trial</a>
+        <a routerLink="/login" class="btn btn-secondary btn-lg">Sign in</a>
+      </div>
+    </div>
+
+    <div class="hero__panel" motionInView="fade" [motionDelay]="0.12">
+      <div class="hero__panel-top">
+        <span class="live-pill"><span class="live-pill__dot"></span> Live service</span>
+        <span class="hero__panel-label">Today at a glance</span>
+      </div>
+      <div class="hero__metrics" motionStagger="slide-up" [motionGap]="0.08">
+        @for (stat of stats; track stat.label) {
+          <article class="metric-card">
+            <strong>{{ stat.value }}</strong>
+            <span>{{ stat.label }}</span>
+          </article>
+        }
+      </div>
+      <ul class="hero__highlights">
+        <li><mat-icon>check_circle</mat-icon> Kitchen queue synced with front-of-house</li>
+        <li><mat-icon>check_circle</mat-icon> Table bookings and walk-ins in one calendar</li>
+        <li><mat-icon>check_circle</mat-icon> Inventory alerts before service breaks down</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <div class="section__header" motionInView="slide-up">
+      <p class="section__eyebrow">Everything in one place</p>
+      <h2>Built for the full restaurant workflow</h2>
+      <p>
+        From the first booking to the last ticket closed, ResOS keeps your team aligned and your
+        guests moving smoothly.
+      </p>
+    </div>
+
+    <div class="feature-grid" motionStagger="slide-up" [motionGap]="0.07">
+      @for (feature of features; track feature.title) {
+        <article class="feature-card">
+          <span class="feature-card__icon"><mat-icon>{{ feature.icon }}</mat-icon></span>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.copy }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="platform" class="section platform">
+    <div class="platform__copy" motionInView="slide-up">
+      <p class="section__eyebrow">Business overview</p>
+      <h2>One platform for owners, managers, and floor teams</h2>
+      <p>
+        ResOS is designed for independent restaurants and growing groups that need professional
+        tooling without enterprise overhead. Give every role the visibility they need while keeping
+        your brand and data secure in a dedicated workspace.
+      </p>
+      <ul class="platform__list">
+        <li><mat-icon>storefront</mat-icon> Multi-location ready with tenant-isolated workspaces</li>
+        <li><mat-icon>dashboard</mat-icon> Executive dashboards for revenue and operations</li>
+        <li><mat-icon>shield</mat-icon> Secure authentication with role-based access</li>
+        <li><mat-icon>speed</mat-icon> Fast, responsive UI for busy service hours</li>
+      </ul>
+      <a routerLink="/register" class="btn btn-primary">Create your workspace</a>
+    </div>
+
+    <div class="platform__cards" motionStagger="slide-up" [motionGap]="0.08">
+      <article class="overview-card">
+        <span class="overview-card__label">For owners</span>
+        <h3>See the business, not just the shift</h3>
+        <p>Track revenue, labor, inventory health, and guest demand from a single executive view.</p>
+      </article>
+      <article class="overview-card">
+        <span class="overview-card__label">For managers</span>
+        <h3>Coordinate service in real time</h3>
+        <p>Move orders, tables, and staff together with live status across every touchpoint.</p>
+      </article>
+      <article class="overview-card">
+        <span class="overview-card__label">For teams</span>
+        <h3>Simple tools on the floor</h3>
+        <p>Clear workflows for kitchen, host stand, and back office without tool switching.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="section steps">
+    <div class="section__header" motionInView="slide-up">
+      <p class="section__eyebrow">How it works</p>
+      <h2>Go live in three straightforward steps</h2>
+    </div>
+
+    <div class="steps__grid" motionStagger="slide-up" [motionGap]="0.08">
+      @for (step of steps; track step.title; let index = $index) {
+        <article class="step-card">
+          <span class="step-card__number">{{ index + 1 }}</span>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.copy }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta__inner" motionInView="scale">
+      <div>
+        <p class="section__eyebrow">Ready to modernize operations?</p>
+        <h2>Give your restaurant a system built for growth.</h2>
+        <p>Create an account in minutes, or sign in to continue managing your workspace.</p>
+      </div>
+      <div class="cta__actions">
+        <a routerLink="/register" class="btn btn-primary btn-lg">Create account</a>
+        <a routerLink="/login" class="btn btn-secondary btn-lg">Sign in</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="landing-footer">
+    <div class="brand brand--footer">
+      <span class="brand-mark">R</span>
+      <span class="brand-name">ResOS</span>
+    </div>
+    <p>Restaurant operating system for orders, reservations, inventory, staff, and analytics.</p>
+    <div class="landing-footer__links">
+      <a routerLink="/login">Sign in</a>
+      <a routerLink="/register">Create account</a>
+    </div>
+  </footer>
+</div>

@@ -5,13 +5,13 @@
 @if (error()) {
   <app-empty-state icon="error_outline" title="Unable to load orders" [message]="error()!" />
 } @else {
-  <mat-tab-group animationDuration="200ms">
+  <mat-tab-group animationDuration="0ms">
     <mat-tab label="Kitchen">
       <div class="tab-content">
         @if (loading()) {
           <app-loading-spinner message="Loading kitchen queue..." />
         } @else if (kitchenOrders().length) {
-          <div class="kitchen-grid">
+          <div class="kitchen-grid" motionStagger="slide-up" [motionGap]="0.06">
             @for (order of kitchenOrders(); track order.id) {
               <app-card [title]="order.orderNumber" [subtitle]="order.customerName ?? 'Guest'">
                 <div class="order-meta">
@@ -74,7 +74,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody motionStagger="fade" [motionGap]="0.04">
                   @for (order of orders(); track order.id) {
                     <tr>
                       <td>
@@ -88,13 +88,13 @@
                       </td>
                       <td class="actions">
                         @if (order.status === 'PENDING') {
-                          <app-button variant="ghost" (clicked)="advanceOrder(order, 'CONFIRMED')">Confirm</app-button>
+                          <app-button size="sm" variant="ghost" (clicked)="advanceOrder(order, 'CONFIRMED')">Confirm</app-button>
                         }
                         @if (order.status === 'SERVED') {
-                          <app-button variant="ghost" (clicked)="advanceOrder(order, 'COMPLETED')">Complete</app-button>
+                          <app-button size="sm" variant="ghost" (clicked)="advanceOrder(order, 'COMPLETED')">Complete</app-button>
                         }
                         @if (order.status !== 'COMPLETED' && order.status !== 'CANCELLED') {
-                          <app-button variant="danger" (clicked)="advanceOrder(order, 'CANCELLED')">Cancel</app-button>
+                          <app-button size="sm" variant="danger" (clicked)="advanceOrder(order, 'CANCELLED')">Cancel</app-button>
                         }
                       </td>
                     </tr>

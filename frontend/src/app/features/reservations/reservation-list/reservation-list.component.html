@@ -5,7 +5,7 @@
 @if (error()) {
   <app-empty-state icon="error_outline" title="Unable to load reservations" [message]="error()!" />
 } @else {
-  <mat-tab-group animationDuration="200ms">
+  <mat-tab-group animationDuration="0ms">
     <mat-tab label="Calendar">
       <div class="tab-content">
         <div class="week-nav">
@@ -19,7 +19,7 @@
         @if (loading()) {
           <app-loading-spinner message="Loading calendar..." />
         } @else {
-          <div class="calendar-grid">
+          <div class="calendar-grid" motionStagger="slide-up" [motionGap]="0.05">
             @for (day of weekDays(); track day.toISOString()) {
               <app-card [title]="formatDayTitle(day)">
                 @if (reservationsForDay(day).length) {
@@ -65,7 +65,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody motionStagger="fade" [motionGap]="0.04">
                   @for (reservation of reservations(); track reservation.id) {
                     <tr>
                       <td>
@@ -87,12 +87,12 @@
                         />
                       </td>
                       <td class="actions">
-                        <app-button variant="ghost" (clicked)="openEditReservationDialog(reservation)">Edit</app-button>
+                        <app-button size="sm" variant="ghost" (clicked)="openEditReservationDialog(reservation)">Edit</app-button>
                         @if (reservation.status === 'CONFIRMED') {
-                          <app-button variant="ghost" (clicked)="updateStatus(reservation, 'SEATED')">Seat</app-button>
+                          <app-button size="sm" variant="ghost" (clicked)="updateStatus(reservation, 'SEATED')">Seat</app-button>
                         }
                         @if (reservation.status !== 'CANCELLED' && reservation.status !== 'COMPLETED') {
-                          <app-button variant="danger" (clicked)="cancelReservation(reservation)">Cancel</app-button>
+                          <app-button size="sm" variant="danger" (clicked)="cancelReservation(reservation)">Cancel</app-button>
                         }
                       </td>
                     </tr>
@@ -132,7 +132,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody motionStagger="fade" [motionGap]="0.04">
                   @for (table of tables(); track table.id) {
                     <tr>
                       <td><strong>{{ table.tableNumber }}</strong></td>
@@ -145,8 +145,8 @@
                         />
                       </td>
                       <td class="actions">
-                        <app-button variant="ghost" (clicked)="openEditTableDialog(table)">Edit</app-button>
-                        <app-button variant="danger" (clicked)="deleteTable(table)">Delete</app-button>
+                        <app-button size="sm" variant="ghost" (clicked)="openEditTableDialog(table)">Edit</app-button>
+                        <app-button size="sm" variant="danger" (clicked)="deleteTable(table)">Delete</app-button>
                       </td>
                     </tr>
                   }

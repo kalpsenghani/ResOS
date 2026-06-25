@@ -1,14 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InventoryService } from '../services/inventory.service';
 import { CreateInventoryItemRequest, InventoryItem, TransactionType } from '../../../shared/models/inventory.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { SelectComponent, SelectOption } from '../../../shared/components/select/select.component';
 
 export interface InventoryFormData {
   restaurantId: string;
@@ -17,76 +13,63 @@ export interface InventoryFormData {
 
 @Component({
   selector: 'app-inventory-form',
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    ButtonComponent,
-  ],
+  imports: [ReactiveFormsModule, MatDialogModule, ButtonComponent, SelectComponent],
   template: `
     <h2 mat-dialog-title>{{ data.item ? 'Edit item' : 'Add inventory item' }}</h2>
     <form [formGroup]="form" (ngSubmit)="submit()" mat-dialog-content class="form">
-      <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" />
-      </mat-form-field>
+      <label class="field">
+        <span class="field-label">Name</span>
+        <input class="input" formControlName="name" />
+      </label>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>SKU</mat-label>
-          <input matInput formControlName="sku" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Category</mat-label>
-          <input matInput formControlName="category" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">SKU</span>
+          <input class="input" formControlName="sku" />
+        </label>
+        <label class="field">
+          <span class="field-label">Category</span>
+          <input class="input" formControlName="category" />
+        </label>
       </div>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Unit</mat-label>
-          <input matInput formControlName="unit" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Supplier</mat-label>
-          <input matInput formControlName="supplier" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Unit</span>
+          <input class="input" formControlName="unit" />
+        </label>
+        <label class="field">
+          <span class="field-label">Supplier</span>
+          <input class="input" formControlName="supplier" />
+        </label>
       </div>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Current stock</mat-label>
-          <input matInput type="number" formControlName="currentStock" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Minimum stock</mat-label>
-          <input matInput type="number" formControlName="minimumStock" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Unit cost</mat-label>
-          <input matInput type="number" step="0.01" formControlName="unitCost" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Current stock</span>
+          <input class="input" type="number" formControlName="currentStock" />
+        </label>
+        <label class="field">
+          <span class="field-label">Minimum stock</span>
+          <input class="input" type="number" formControlName="minimumStock" />
+        </label>
+        <label class="field">
+          <span class="field-label">Unit cost</span>
+          <input class="input" type="number" step="0.01" formControlName="unitCost" />
+        </label>
       </div>
 
       @if (data.item) {
         <h3>Record transaction</h3>
         <div class="row">
-          <mat-form-field appearance="outline">
-            <mat-label>Type</mat-label>
-            <mat-select formControlName="transactionType">
-              @for (type of transactionTypes; track type) {
-                <mat-option [value]="type">{{ type }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Quantity</mat-label>
-            <input matInput type="number" formControlName="transactionQty" />
-          </mat-form-field>
+          <label class="field">
+            <span class="field-label">Type</span>
+            <app-select formControlName="transactionType" [options]="transactionTypeOptions" placeholder="Select type" />
+          </label>
+          <label class="field">
+            <span class="field-label">Quantity</span>
+            <input class="input" type="number" formControlName="transactionQty" />
+          </label>
         </div>
       }
 
@@ -136,6 +119,10 @@ export class InventoryFormComponent implements OnInit {
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly transactionTypes: TransactionType[] = ['PURCHASE', 'USAGE', 'WASTE', 'ADJUSTMENT', 'TRANSFER'];
+  readonly transactionTypeOptions: SelectOption[] = this.transactionTypes.map((type) => ({
+    value: type,
+    label: type.charAt(0) + type.slice(1).toLowerCase(),
+  }));
 
   readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],

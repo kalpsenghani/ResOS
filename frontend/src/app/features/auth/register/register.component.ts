@@ -3,22 +3,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthActions } from '../../../store/auth/auth.actions';
 import { authFeature } from '../../../store/auth/auth.reducer';
 
 @Component({
   selector: 'app-register',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })

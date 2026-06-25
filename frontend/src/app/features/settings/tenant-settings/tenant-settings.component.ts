@@ -3,9 +3,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MotionInViewDirective } from '../../../shared/animations';
 import { TenantActions } from '../../../store/tenant/tenant.actions';
 import { tenantFeature } from '../../../store/tenant/tenant.reducer';
 
@@ -14,10 +13,9 @@ import { tenantFeature } from '../../../store/tenant/tenant.reducer';
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MotionInViewDirective,
   ],
   templateUrl: './tenant-settings.component.html',
   styleUrl: './tenant-settings.component.scss',

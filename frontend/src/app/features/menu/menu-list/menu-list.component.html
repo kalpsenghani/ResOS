@@ -5,7 +5,7 @@
 @if (error()) {
   <app-empty-state icon="error_outline" title="Unable to load menu" [message]="error()!" />
 } @else {
-  <mat-tab-group animationDuration="200ms">
+  <mat-tab-group animationDuration="0ms">
     <mat-tab label="Items">
       <div class="tab-content">
         @if (loading()) {
@@ -23,7 +23,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody motionStagger="fade" [motionGap]="0.04">
                   @for (item of items(); track item.id) {
                     <tr>
                       <td>
@@ -41,11 +41,11 @@
                         />
                       </td>
                       <td class="actions">
-                        <app-button variant="ghost" (clicked)="openItemDialog(item)">Edit</app-button>
-                        <app-button variant="ghost" (clicked)="toggleAvailability(item)">
+                        <app-button size="sm" variant="ghost" (clicked)="openItemDialog(item)">Edit</app-button>
+                        <app-button size="sm" variant="ghost" (clicked)="toggleAvailability(item)">
                           {{ item.available ? 'Disable' : 'Enable' }}
                         </app-button>
-                        <app-button variant="danger" (clicked)="deleteItem(item)">Delete</app-button>
+                        <app-button size="sm" variant="danger" (clicked)="deleteItem(item)">Delete</app-button>
                       </td>
                     </tr>
                   }
@@ -82,15 +82,15 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody motionStagger="fade" [motionGap]="0.04">
                   @for (category of categories(); track category.id) {
                     <tr>
                       <td><strong>{{ category.name }}</strong></td>
                       <td>{{ category.description ?? '—' }}</td>
                       <td>{{ category.sortOrder }}</td>
                       <td class="actions">
-                        <app-button variant="ghost" (clicked)="openCategoryDialog(category)">Edit</app-button>
-                        <app-button variant="danger" (clicked)="deleteCategory(category)">Delete</app-button>
+                        <app-button size="sm" variant="ghost" (clicked)="openCategoryDialog(category)">Edit</app-button>
+                        <app-button size="sm" variant="danger" (clicked)="deleteCategory(category)">Delete</app-button>
                       </td>
                     </tr>
                   }

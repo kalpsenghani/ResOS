@@ -7,6 +7,10 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 @Component({
   selector: 'app-button',
   imports: [MatIconModule],
+  host: {
+    class: 'app-button-host',
+    '[class.app-button-host--full]': 'fullWidth()',
+  },
   template: `
     <button
       [type]="type()"
@@ -23,10 +27,19 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
     </button>
   `,
   styles: `
-    :host {
-      display: inline-block;
+    :host.app-button-host {
+      display: inline-flex;
+      vertical-align: middle;
+      max-width: 100%;
+    }
+    :host.app-button-host--full {
+      display: flex;
+      width: 100%;
     }
     button {
+      width: auto;
+    }
+    :host.app-button-host--full button {
       width: 100%;
     }
     .btn-glyph {

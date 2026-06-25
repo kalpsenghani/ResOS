@@ -8,6 +8,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { KpiWidgetComponent } from '../../../shared/components/kpi-widget/kpi-widget.component';
 import { RevenueChartComponent } from '../../dashboard/components/revenue-chart/revenue-chart.component';
+import { MotionStaggerDirective } from '../../../shared/animations';
 import { AnalyticsService } from '../services/analytics.service';
 import { RestaurantService } from '../../../core/restaurant/restaurant.service';
 import {
@@ -28,6 +29,7 @@ import { RevenueChart } from '../../../shared/models/dashboard.model';
     EmptyStateComponent,
     KpiWidgetComponent,
     RevenueChartComponent,
+    MotionStaggerDirective,
     CurrencyPipe,
   ],
   templateUrl: './analytics-dashboard.component.html',

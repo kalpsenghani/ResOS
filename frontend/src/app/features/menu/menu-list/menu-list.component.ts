@@ -8,6 +8,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { MotionStaggerDirective } from '../../../shared/animations';
 import { MenuService } from '../services/menu.service';
 import { RestaurantService } from '../../../core/restaurant/restaurant.service';
 import { MenuCategory, MenuItem } from '../../../shared/models/menu.model';
@@ -24,6 +25,7 @@ import { MenuFormComponent } from '../menu-form/menu-form.component';
     EmptyStateComponent,
     StatusBadgeComponent,
     ButtonComponent,
+    MotionStaggerDirective,
     CurrencyPipe,
   ],
   templateUrl: './menu-list.component.html',

@@ -8,6 +8,7 @@ import { DataTableComponent } from '../../shared/components/data-table/data-tabl
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { RevenueChartComponent } from './components/revenue-chart/revenue-chart.component';
+import { MotionStaggerDirective } from '../../shared/animations';
 import { DashboardService } from '../../core/dashboard/dashboard.service';
 import { RestaurantService } from '../../core/restaurant/restaurant.service';
 import { DashboardKpis, RecentOrder, RevenueChart } from '../../shared/models/dashboard.model';
@@ -23,6 +24,7 @@ import { TenantActions } from '../../store/tenant/tenant.actions';
     LoadingSpinnerComponent,
     EmptyStateComponent,
     RevenueChartComponent,
+    MotionStaggerDirective,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

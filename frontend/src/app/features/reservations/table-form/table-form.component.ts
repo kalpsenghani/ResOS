@@ -1,7 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReservationService } from '../services/reservation.service';
 import { CreateTableRequest, RestaurantTable, UpdateTableRequest } from '../../../shared/models/reservation.model';
@@ -14,22 +12,22 @@ export interface TableFormData {
 
 @Component({
   selector: 'app-table-form',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, ButtonComponent],
+  imports: [ReactiveFormsModule, MatDialogModule, ButtonComponent],
   template: `
     <h2 mat-dialog-title>{{ data.table ? 'Edit table' : 'Add table' }}</h2>
     <form [formGroup]="form" mat-dialog-content class="form">
-      <mat-form-field appearance="outline">
-        <mat-label>Table number</mat-label>
-        <input matInput formControlName="tableNumber" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Capacity</mat-label>
-        <input matInput type="number" min="1" formControlName="capacity" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Location</mat-label>
-        <input matInput formControlName="location" placeholder="Main Floor, Patio, Bar..." />
-      </mat-form-field>
+      <label class="field">
+        <span class="field-label">Table number</span>
+        <input class="input" formControlName="tableNumber" />
+      </label>
+      <label class="field">
+        <span class="field-label">Capacity</span>
+        <input class="input" type="number" min="1" formControlName="capacity" />
+      </label>
+      <label class="field">
+        <span class="field-label">Location</span>
+        <input class="input" formControlName="location" placeholder="Main Floor, Patio, Bar..." />
+      </label>
       @if (error()) {
         <p class="error">{{ error() }}</p>
       }

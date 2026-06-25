@@ -8,6 +8,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { MotionStaggerDirective } from '../../../shared/animations';
 import { ReservationService } from '../services/reservation.service';
 import { RestaurantService } from '../../../core/restaurant/restaurant.service';
 import { Reservation, ReservationStatus, RestaurantTable } from '../../../shared/models/reservation.model';
@@ -25,6 +26,7 @@ import { TableFormComponent } from '../table-form/table-form.component';
     EmptyStateComponent,
     StatusBadgeComponent,
     ButtonComponent,
+    MotionStaggerDirective,
     DatePipe,
   ],
   templateUrl: './reservation-list.component.html',

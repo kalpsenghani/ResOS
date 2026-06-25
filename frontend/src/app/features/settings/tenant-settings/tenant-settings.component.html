@@ -14,32 +14,32 @@
   @if (loading()) {
     <mat-spinner diameter="32"></mat-spinner>
   } @else if (tenant(); as t) {
-    <section class="settings-card">
+    <section class="settings-card" motionInView="slide-up">
       <div class="meta">
         <p><strong>Slug:</strong> {{ t.slug }}</p>
         <p><strong>Plan:</strong> {{ t.subscription?.plan ?? '—' }} ({{ t.subscription?.status ?? '—' }})</p>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="settings-form">
-        <mat-form-field appearance="outline">
-          <mat-label>Restaurant name</mat-label>
-          <input matInput formControlName="name" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Restaurant name</span>
+          <input class="input" formControlName="name" />
+        </label>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Phone</mat-label>
-          <input matInput formControlName="phone" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Phone</span>
+          <input class="input" formControlName="phone" />
+        </label>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Timezone</mat-label>
-          <input matInput formControlName="timezone" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Timezone</span>
+          <input class="input" formControlName="timezone" />
+        </label>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Currency</mat-label>
-          <input matInput formControlName="currency" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Currency</span>
+          <input class="input" formControlName="currency" />
+        </label>
 
         <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
           @if (saving()) {

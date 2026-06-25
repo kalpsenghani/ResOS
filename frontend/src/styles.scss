@@ -1,6 +1,8 @@
 @use 'styles/variables' as *;
 @use 'styles/themes';
 @use 'styles/form-fields';
+@use 'styles/tabs';
+@use 'styles/tables';
 
 @tailwind base;
 @tailwind components;

@@ -1,0 +1,52 @@
+// ---------------------------------------------------------------------------
+// Data tables — shared styles for list pages (orders, menu, staff, etc.)
+// ---------------------------------------------------------------------------
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+th,
+td {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+
+th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.meta {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+// Action cells — keep buttons on one line, vertically centered with the row
+td.actions {
+  text-align: right;
+  white-space: nowrap;
+  width: 1%;
+}
+
+td.actions app-button {
+  margin-left: 0.35rem;
+}
+
+td.actions app-button:first-child {
+  margin-left: 0;
+}

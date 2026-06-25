@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { routeFade } from '../../animations';
 import { SidebarComponent, SidebarNavGroup } from '../../components/sidebar/sidebar.component';
 import { ThemeService } from '../../../core/theme/theme.service';
 import { AuthActions } from '../../../store/auth/auth.actions';
@@ -43,6 +44,7 @@ const NAV_GROUPS: SidebarNavGroup[] = [
   imports: [RouterOutlet, SidebarComponent, MatIconModule, MatMenuModule],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
+  animations: [routeFade],
 })
 export class DashboardLayoutComponent {
   private readonly store = inject(Store);
@@ -64,6 +66,10 @@ export class DashboardLayoutComponent {
     const last = u?.lastName?.charAt(0) ?? '';
     return (first + last).toUpperCase() || 'U';
   });
+
+  getRouteState(outlet: RouterOutlet): string {
+    return outlet?.isActivated ? (outlet.activatedRoute.snapshot.routeConfig?.path ?? '') : '';
+  }
 
   toggleSidebar(): void {
     this.sidebarCollapsed.update((value) => !value);

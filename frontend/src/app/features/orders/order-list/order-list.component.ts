@@ -8,6 +8,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { MotionStaggerDirective } from '../../../shared/animations';
 import { OrderService } from '../services/order.service';
 import { MenuService } from '../../menu/services/menu.service';
 import { RestaurantService } from '../../../core/restaurant/restaurant.service';
@@ -26,6 +27,7 @@ import { OrderFormComponent } from '../order-form/order-form.component';
     EmptyStateComponent,
     StatusBadgeComponent,
     ButtonComponent,
+    MotionStaggerDirective,
     CurrencyPipe,
     DatePipe,
   ],

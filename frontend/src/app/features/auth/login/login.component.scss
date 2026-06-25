@@ -28,11 +28,7 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-}
-
-.auth-form .mat-mdc-form-field {
-  margin-bottom: 0.65rem;
+  gap: 1.1rem;
 }
 
 .auth-error {

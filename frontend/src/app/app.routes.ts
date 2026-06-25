@@ -1,12 +1,20 @@
 import { Routes } from '@angular/router';
+import { landingGuard } from './core/guards/landing.guard';
 import { appShellRoutes } from './features/shell/shell.routes';
+import { authRoutes, publicAuthRoutes } from './features/auth/auth.routes';
 
 export const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    canActivate: [landingGuard],
+    loadComponent: () => import('./features/landing/landing.component').then((m) => m.LandingComponent),
+  },
+  ...publicAuthRoutes,
+  {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.authRoutes),
+    children: authRoutes,
   },
   ...appShellRoutes,
-  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: '' },
 ];

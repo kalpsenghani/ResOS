@@ -9,35 +9,35 @@
   }
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Restaurant slug</mat-label>
-      <input matInput formControlName="tenantSlug" placeholder="joes-pizza" />
+    <label class="field" [class.field--invalid]="form.controls.tenantSlug.touched && form.controls.tenantSlug.invalid">
+      <span class="field-label">Restaurant slug</span>
+      <input class="input" formControlName="tenantSlug" placeholder="joes-pizza" autocomplete="organization" />
       @if (form.controls.tenantSlug.touched && form.controls.tenantSlug.hasError('required')) {
-        <mat-error>Restaurant slug is required</mat-error>
+        <span class="field-error">Restaurant slug is required</span>
       } @else if (form.controls.tenantSlug.touched && form.controls.tenantSlug.hasError('pattern')) {
-        <mat-error>Use lowercase letters, numbers and hyphens</mat-error>
+        <span class="field-error">Use lowercase letters, numbers and hyphens</span>
       }
-    </mat-form-field>
+    </label>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email" autocomplete="email" />
+    <label class="field" [class.field--invalid]="form.controls.email.touched && form.controls.email.invalid">
+      <span class="field-label">Email</span>
+      <input class="input" type="email" formControlName="email" autocomplete="email" />
       @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-        <mat-error>Email is required</mat-error>
+        <span class="field-error">Email is required</span>
       } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
-        <mat-error>Enter a valid email address</mat-error>
+        <span class="field-error">Enter a valid email address</span>
       }
-    </mat-form-field>
+    </label>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input matInput type="password" formControlName="password" autocomplete="current-password" />
+    <label class="field" [class.field--invalid]="form.controls.password.touched && form.controls.password.invalid">
+      <span class="field-label">Password</span>
+      <input class="input" type="password" formControlName="password" autocomplete="current-password" />
       @if (form.controls.password.touched && form.controls.password.hasError('required')) {
-        <mat-error>Password is required</mat-error>
+        <span class="field-error">Password is required</span>
       } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
-        <mat-error>Password must be at least 8 characters</mat-error>
+        <span class="field-error">Password must be at least 8 characters</span>
       }
-    </mat-form-field>
+    </label>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="loading()" class="submit-btn">
       @if (loading()) {
@@ -50,6 +50,6 @@
 
   <p class="auth-switch">
     New to ResOS?
-    <a routerLink="/auth/register">Create an account</a>
+    <a routerLink="/register">Create an account</a>
   </p>
 </div>

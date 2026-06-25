@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MotionStaggerDirective } from '../../animations';
 
 export interface SidebarNavItem {
   label: string;
@@ -16,7 +17,7 @@ export interface SidebarNavGroup {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, MatIconModule, MatTooltipModule],
+  imports: [RouterLink, RouterLinkActive, MatIconModule, MatTooltipModule, MotionStaggerDirective],
   template: `
     <aside class="sidebar" [class.sidebar--collapsed]="collapsed()">
       <div class="sidebar__brand">
@@ -29,7 +30,7 @@ export interface SidebarNavGroup {
         }
       </div>
 
-      <nav class="sidebar__nav">
+      <nav class="sidebar__nav" motionStagger="slide-right" [motionGap]="0.05">
         @for (group of groups(); track group.label) {
           <div class="nav-group">
             @if (!collapsed()) {
@@ -67,7 +68,7 @@ export interface SidebarNavGroup {
       display: flex;
       flex-direction: column;
       width: 16rem;
-      min-height: 100%;
+      height: 100%;
       background: var(--surface-sidebar);
       border-right: 1px solid var(--sidebar-border);
       transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);

@@ -1,8 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReservationService } from '../services/reservation.service';
 import {
@@ -12,6 +9,7 @@ import {
   UpdateReservationRequest,
 } from '../../../shared/models/reservation.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { SelectComponent, SelectOption } from '../../../shared/components/select/select.component';
 
 export interface ReservationFormData {
   restaurantId: string;
@@ -21,66 +19,52 @@ export interface ReservationFormData {
 
 @Component({
   selector: 'app-reservation-form',
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDialogModule,
-    ButtonComponent,
-  ],
+  imports: [ReactiveFormsModule, MatDialogModule, ButtonComponent, SelectComponent],
   template: `
     <h2 mat-dialog-title>{{ data.reservation ? 'Edit reservation' : 'New reservation' }}</h2>
     <form [formGroup]="form" mat-dialog-content class="form">
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Guest name</mat-label>
-          <input matInput formControlName="guestName" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Party size</mat-label>
-          <input matInput type="number" min="1" formControlName="partySize" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Guest name</span>
+          <input class="input" formControlName="guestName" />
+        </label>
+        <label class="field">
+          <span class="field-label">Party size</span>
+          <input class="input" type="number" min="1" formControlName="partySize" />
+        </label>
       </div>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Date</mat-label>
-          <input matInput type="date" formControlName="reservationDate" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Start time</mat-label>
-          <input matInput type="time" formControlName="startTime" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Date</span>
+          <input class="input" type="date" formControlName="reservationDate" />
+        </label>
+        <label class="field">
+          <span class="field-label">Start time</span>
+          <input class="input" type="time" formControlName="startTime" />
+        </label>
       </div>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Phone</mat-label>
-          <input matInput formControlName="guestPhone" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="guestEmail" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Phone</span>
+          <input class="input" formControlName="guestPhone" />
+        </label>
+        <label class="field">
+          <span class="field-label">Email</span>
+          <input class="input" type="email" formControlName="guestEmail" />
+        </label>
       </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Table (optional)</mat-label>
-        <mat-select formControlName="tableId">
-          <mat-option value="">Auto-assign</mat-option>
-          @for (table of data.tables; track table.id) {
-            <mat-option [value]="table.id">
-              {{ table.tableNumber }} (seats {{ table.capacity }})
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      <label class="field">
+        <span class="field-label">Table (optional)</span>
+        <app-select formControlName="tableId" [options]="tableOptions" placeholder="Auto-assign" />
+      </label>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Special requests</mat-label>
-        <textarea matInput rows="2" formControlName="specialRequests"></textarea>
-      </mat-form-field>
+      <label class="field">
+        <span class="field-label">Special requests</span>
+        <textarea class="input" rows="2" formControlName="specialRequests"></textarea>
+      </label>
 
       @if (availabilityMessage()) {
         <p class="availability" [class.unavailable]="!availabilityOk()">{{ availabilityMessage() }}</p>
@@ -137,6 +121,14 @@ export class ReservationFormComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly availabilityMessage = signal<string | null>(null);
   readonly availabilityOk = signal(true);
+
+  readonly tableOptions: SelectOption[] = [
+    { value: '', label: 'Auto-assign' },
+    ...this.data.tables.map((table) => ({
+      value: table.id,
+      label: `${table.tableNumber} (seats ${table.capacity})`,
+    })),
+  ];
 
   readonly form = this.fb.nonNullable.group({
     guestName: ['', Validators.required],

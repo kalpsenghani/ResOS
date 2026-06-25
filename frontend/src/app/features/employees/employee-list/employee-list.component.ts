@@ -2,8 +2,6 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { CardComponent } from '../../../shared/components/card/card.component';
@@ -11,6 +9,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { MotionStaggerDirective } from '../../../shared/animations';
 import { EmployeeService } from '../services/employee.service';
 import { RestaurantService } from '../../../core/restaurant/restaurant.service';
 import { Employee, EmployeeSchedule } from '../../../shared/models/employee.model';
@@ -21,8 +20,6 @@ import { EmployeeFormComponent } from '../employee-form/employee-form.component'
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatTabsModule,
     PageHeaderComponent,
     CardComponent,
@@ -30,6 +27,7 @@ import { EmployeeFormComponent } from '../employee-form/employee-form.component'
     EmptyStateComponent,
     StatusBadgeComponent,
     ButtonComponent,
+    MotionStaggerDirective,
     CurrencyPipe,
     DatePipe,
   ],

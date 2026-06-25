@@ -52,8 +52,8 @@
       </div>
     </header>
 
-    <main class="dashboard-content">
-      <router-outlet />
+    <main class="dashboard-content" [@routeFade]="getRouteState(outlet)">
+      <router-outlet #outlet="outlet" />
     </main>
   </div>
 </div>

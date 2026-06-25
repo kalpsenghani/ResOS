@@ -1,6 +1,8 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, effect, input, signal, untracked } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { animate } from 'motion';
+import { prefersReducedMotion } from '../../animations/motion-presets';
 import { KpiTrend } from '../../models/dashboard.model';
 
 @Component({
@@ -19,9 +21,9 @@ import { KpiTrend } from '../../models/dashboard.model';
       </div>
       <p class="kpi__value">
         @if (format() === 'currency') {
-          {{ value() | currency: 'USD' : 'symbol' : '1.0-0' }}
+          {{ displayValue() | currency: 'USD' : 'symbol' : '1.0-0' }}
         } @else {
-          {{ value() | number: '1.0-0' }}
+          {{ displayValue() | number: '1.0-0' }}
         }
       </p>
       <span class="kpi__label">{{ label() }}</span>
@@ -32,8 +34,8 @@ import { KpiTrend } from '../../models/dashboard.model';
       position: relative;
       background: var(--surface-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 1.25rem;
-      padding: 1.35rem;
+      border-radius: 1.1rem;
+      padding: 1.15rem;
       box-shadow: var(--shadow-sm);
       overflow: hidden;
       transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
@@ -60,7 +62,7 @@ import { KpiTrend } from '../../models/dashboard.model';
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
     .kpi__icon-wrap {
       display: grid;
@@ -96,7 +98,7 @@ import { KpiTrend } from '../../models/dashboard.model';
 
     .kpi__value {
       margin: 0;
-      font-size: 2rem;
+      font-size: 1.65rem;
       font-weight: 800;
       letter-spacing: -0.03em;
       color: var(--text-primary);
@@ -118,6 +120,26 @@ export class KpiWidgetComponent {
   readonly trend = input<KpiTrend>('FLAT');
   readonly icon = input<string | undefined>(undefined);
   readonly format = input<'number' | 'currency'>('number');
+
+  /** Smoothly counts up to the latest value for a premium dashboard feel. */
+  readonly displayValue = signal(0);
+
+  constructor() {
+    effect((onCleanup) => {
+      const target = this.value();
+      if (prefersReducedMotion()) {
+        this.displayValue.set(target);
+        return;
+      }
+      const from = untracked(this.displayValue);
+      const controls = animate(from, target, {
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1],
+        onUpdate: (latest) => this.displayValue.set(latest),
+      });
+      onCleanup(() => controls.stop());
+    });
+  }
 
   readonly trendClass = computed(() => {
     const trend = this.trend();

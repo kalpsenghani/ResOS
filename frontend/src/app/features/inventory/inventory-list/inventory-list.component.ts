@@ -2,8 +2,6 @@ import { DecimalPipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -13,6 +11,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { MotionStaggerDirective } from '../../../shared/animations';
 import { InventoryService } from '../services/inventory.service';
 import { RestaurantService } from '../../../core/restaurant/restaurant.service';
 import { InventoryItem, StockAlert } from '../../../shared/models/inventory.model';
@@ -23,8 +22,6 @@ import { InventoryFormComponent } from '../inventory-form/inventory-form.compone
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatCheckboxModule,
     MatTabsModule,
     PageHeaderComponent,
@@ -33,6 +30,7 @@ import { InventoryFormComponent } from '../inventory-form/inventory-form.compone
     EmptyStateComponent,
     StatusBadgeComponent,
     ButtonComponent,
+    MotionStaggerDirective,
     DecimalPipe,
   ],
   templateUrl: './inventory-list.component.html',

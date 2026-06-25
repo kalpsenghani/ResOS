@@ -16,7 +16,7 @@
         Orders, reservations, inventory and analytics — beautifully fast, all in one place.
       </p>
 
-      <ul class="auth-brand__features">
+      <ul class="auth-brand__features" motionStagger="slide-right" [motionGap]="0.1" [motionDelay]="0.15">
         @for (item of highlights; track item.title) {
           <li>
             <span class="feature-icon"><mat-icon>{{ item.icon }}</mat-icon></span>

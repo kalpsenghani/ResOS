@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../../../core/theme/theme.service';
+import { MotionStaggerDirective } from '../../animations';
 
 @Component({
   selector: 'app-auth-layout',
-  imports: [RouterOutlet, MatIconModule],
+  imports: [RouterOutlet, MatIconModule, MotionStaggerDirective],
   templateUrl: './auth-layout.component.html',
   styleUrl: './auth-layout.component.scss',
 })

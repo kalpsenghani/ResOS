@@ -1,8 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmployeeService } from '../services/employee.service';
 import {
@@ -12,6 +9,7 @@ import {
   UpdateEmployeeRequest,
 } from '../../../shared/models/employee.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { SelectComponent, SelectOption } from '../../../shared/components/select/select.component';
 
 export interface EmployeeFormData {
   restaurantId: string;
@@ -20,64 +18,53 @@ export interface EmployeeFormData {
 
 @Component({
   selector: 'app-employee-form',
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDialogModule,
-    ButtonComponent,
-  ],
+  imports: [ReactiveFormsModule, MatDialogModule, ButtonComponent, SelectComponent],
   template: `
     <h2 mat-dialog-title>{{ data.employee ? 'Edit employee' : 'Add employee' }}</h2>
     <form [formGroup]="form" mat-dialog-content class="form">
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>First name</mat-label>
-          <input matInput formControlName="firstName" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Last name</mat-label>
-          <input matInput formControlName="lastName" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">First name</span>
+          <input class="input" formControlName="firstName" />
+        </label>
+        <label class="field">
+          <span class="field-label">Last name</span>
+          <input class="input" formControlName="lastName" />
+        </label>
       </div>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Phone</mat-label>
-          <input matInput formControlName="phone" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Email</span>
+          <input class="input" type="email" formControlName="email" />
+        </label>
+        <label class="field">
+          <span class="field-label">Phone</span>
+          <input class="input" formControlName="phone" />
+        </label>
       </div>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Position</mat-label>
-          <input matInput formControlName="position" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Hourly rate</mat-label>
-          <input matInput type="number" step="0.01" formControlName="hourlyRate" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Position</span>
+          <input class="input" formControlName="position" />
+        </label>
+        <label class="field">
+          <span class="field-label">Hourly rate</span>
+          <input class="input" type="number" step="0.01" formControlName="hourlyRate" />
+        </label>
       </div>
 
       <div class="row">
-        <mat-form-field appearance="outline">
-          <mat-label>Hire date</mat-label>
-          <input matInput type="date" formControlName="hireDate" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Hire date</span>
+          <input class="input" type="date" formControlName="hireDate" />
+        </label>
         @if (data.employee) {
-          <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              @for (status of statuses; track status) {
-                <mat-option [value]="status">{{ status }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+          <label class="field">
+            <span class="field-label">Status</span>
+            <app-select formControlName="status" [options]="statusOptions" placeholder="Select status" />
+          </label>
         }
       </div>
 
@@ -122,6 +109,10 @@ export class EmployeeFormComponent implements OnInit {
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly statuses: EmployeeStatus[] = ['ACTIVE', 'ON_LEAVE', 'TERMINATED'];
+  readonly statusOptions: SelectOption[] = this.statuses.map((status) => ({
+    value: status,
+    label: status.replace('_', ' '),
+  }));
 
   readonly form = this.fb.nonNullable.group({
     firstName: ['', Validators.required],

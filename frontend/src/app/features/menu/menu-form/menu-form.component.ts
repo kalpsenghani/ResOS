@@ -1,8 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MenuService } from '../services/menu.service';
 import {
@@ -14,6 +11,7 @@ import {
   UpdateMenuItemRequest,
 } from '../../../shared/models/menu.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { SelectComponent, SelectOption } from '../../../shared/components/select/select.component';
 
 export type MenuFormMode = 'category' | 'item';
 
@@ -27,56 +25,45 @@ export interface MenuFormData {
 
 @Component({
   selector: 'app-menu-form',
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDialogModule,
-    ButtonComponent,
-  ],
+  imports: [ReactiveFormsModule, MatDialogModule, ButtonComponent, SelectComponent],
   template: `
     <h2 mat-dialog-title>{{ title() }}</h2>
     <form [formGroup]="form" mat-dialog-content class="form">
       @if (data.mode === 'category') {
-        <mat-form-field appearance="outline">
-          <mat-label>Category name</mat-label>
-          <input matInput formControlName="name" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput rows="2" formControlName="description"></textarea>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Sort order</mat-label>
-          <input matInput type="number" formControlName="sortOrder" />
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Category name</span>
+          <input class="input" formControlName="name" />
+        </label>
+        <label class="field">
+          <span class="field-label">Description</span>
+          <textarea class="input" rows="2" formControlName="description"></textarea>
+        </label>
+        <label class="field">
+          <span class="field-label">Sort order</span>
+          <input class="input" type="number" formControlName="sortOrder" />
+        </label>
       } @else {
-        <mat-form-field appearance="outline">
-          <mat-label>Category</mat-label>
-          <mat-select formControlName="categoryId">
-            @for (category of data.categories; track category.id) {
-              <mat-option [value]="category.id">{{ category.name }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Item name</mat-label>
-          <input matInput formControlName="name" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput rows="2" formControlName="description"></textarea>
-        </mat-form-field>
+        <label class="field">
+          <span class="field-label">Category</span>
+          <app-select formControlName="categoryId" [options]="categoryOptions" placeholder="Select category" />
+        </label>
+        <label class="field">
+          <span class="field-label">Item name</span>
+          <input class="input" formControlName="name" />
+        </label>
+        <label class="field">
+          <span class="field-label">Description</span>
+          <textarea class="input" rows="2" formControlName="description"></textarea>
+        </label>
         <div class="row">
-          <mat-form-field appearance="outline">
-            <mat-label>Price</mat-label>
-            <input matInput type="number" step="0.01" formControlName="price" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Prep time (min)</mat-label>
-            <input matInput type="number" formControlName="preparationTime" />
-          </mat-form-field>
+          <label class="field">
+            <span class="field-label">Price</span>
+            <input class="input" type="number" step="0.01" formControlName="price" />
+          </label>
+          <label class="field">
+            <span class="field-label">Prep time (min)</span>
+            <input class="input" type="number" formControlName="preparationTime" />
+          </label>
         </div>
       }
       @if (error()) {
@@ -118,6 +105,11 @@ export class MenuFormComponent {
 
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
+
+  readonly categoryOptions: SelectOption[] = this.data.categories.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
 
   readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],

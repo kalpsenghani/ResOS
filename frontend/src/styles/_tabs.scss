@@ -1,0 +1,76 @@
+// ---------------------------------------------------------------------------
+// Material tabs — pill-style segmented control (no sliding ink bar)
+// Applied globally to every mat-tab-group in the app.
+// ---------------------------------------------------------------------------
+
+.mat-mdc-tab-group {
+  --mat-tab-header-divider-color: transparent;
+  --mat-tab-header-active-label-text-color: var(--text-primary);
+  --mat-tab-header-inactive-label-text-color: var(--text-muted);
+  --mat-tab-header-active-focus-label-text-color: var(--text-primary);
+  --mat-tab-header-inactive-hover-label-text-color: var(--text-primary);
+  --mdc-tab-indicator-active-indicator-color: transparent;
+  --mat-tab-header-active-ripple-color: transparent;
+  --mat-tab-header-inactive-ripple-color: transparent;
+}
+
+.mat-mdc-tab-header {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+.mat-mdc-tab-label-container {
+  flex-grow: 0;
+}
+
+.mat-mdc-tab-labels {
+  display: inline-flex;
+  gap: 0.15rem;
+  padding: 0.22rem;
+  border-radius: 0.85rem;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-subtle);
+}
+
+.mat-mdc-tab {
+  flex-grow: 0 !important;
+  min-width: auto !important;
+  height: 2.35rem !important;
+  padding: 0 1.05rem !important;
+  border-radius: 0.65rem !important;
+  opacity: 1 !important;
+  letter-spacing: -0.01em;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+}
+
+.mat-mdc-tab .mdc-tab__text-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.mat-mdc-tab.mdc-tab--active {
+  background: var(--surface-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--text-primary);
+}
+
+.mat-mdc-tab:hover:not(.mdc-tab--active) .mdc-tab__text-label {
+  color: var(--text-primary);
+}
+
+// Hide the default sliding underline / ink bar
+.mat-mdc-tab .mdc-tab-indicator {
+  display: none;
+}
+
+.mat-mdc-tab-body-wrapper {
+  margin-top: 0;
+}
+
+.tab-content {
+  padding-top: 1.25rem;
+}

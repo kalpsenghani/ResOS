@@ -5,11 +5,11 @@
 } @else if (loading()) {
   <app-loading-spinner message="Loading analytics..." />
 } @else {
-  <mat-tab-group animationDuration="200ms">
+  <mat-tab-group animationDuration="0ms">
     <mat-tab label="Revenue">
       <div class="tab-content">
         @if (revenue(); as data) {
-          <section class="kpi-grid">
+          <section class="kpi-grid" motionStagger="slide-up" [motionGap]="0.07">
             <app-kpi-widget
               label="Total revenue"
               [value]="data.totalRevenue"
@@ -37,7 +37,7 @@
     <mat-tab label="Inventory">
       <div class="tab-content">
         @if (inventory(); as data) {
-          <section class="kpi-grid">
+          <section class="kpi-grid" motionStagger="slide-up" [motionGap]="0.07">
             <app-kpi-widget label="Total items" [value]="data.totalItems" trend="FLAT" icon="inventory_2" />
             <app-kpi-widget label="Low stock" [value]="data.lowStockItems" trend="FLAT" icon="warning" />
             <app-kpi-widget
@@ -86,7 +86,7 @@
     <mat-tab label="Employees">
       <div class="tab-content">
         @if (employees(); as data) {
-          <section class="kpi-grid">
+          <section class="kpi-grid" motionStagger="slide-up" [motionGap]="0.07">
             <app-kpi-widget label="Active staff" [value]="data.activeEmployees" trend="FLAT" icon="groups" />
             <app-kpi-widget label="Scheduled shifts" [value]="data.scheduledShifts" trend="FLAT" icon="event" />
             <app-kpi-widget label="Total hours" [value]="data.totalHours" trend="FLAT" icon="schedule" />
@@ -129,7 +129,7 @@
     <mat-tab label="Orders">
       <div class="tab-content">
         @if (orders(); as data) {
-          <section class="kpi-grid">
+          <section class="kpi-grid" motionStagger="slide-up" [motionGap]="0.07">
             <app-kpi-widget label="Total orders" [value]="data.totalOrders" trend="FLAT" icon="receipt_long" />
             <app-kpi-widget label="Completed" [value]="data.completedOrders" trend="FLAT" icon="check_circle" />
             <app-kpi-widget

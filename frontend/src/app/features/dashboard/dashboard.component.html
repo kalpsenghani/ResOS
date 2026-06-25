@@ -9,7 +9,7 @@
 } @else if (error()) {
   <app-empty-state icon="error_outline" title="Unable to load dashboard" [message]="error()!" />
 } @else if (kpis(); as data) {
-  <section class="kpi-grid">
+  <section class="kpi-grid" motionStagger="slide-up" [motionGap]="0.07">
     <app-kpi-widget
       label="Revenue"
       [value]="data.revenue.value"
@@ -56,7 +56,7 @@
     />
   </section>
 
-  <section class="dashboard-grid">
+  <section class="dashboard-grid" motionStagger="slide-up" [motionGap]="0.1">
     <app-card eyebrow="Performance" title="Revenue trend" subtitle="Last 7 days">
       <app-revenue-chart [chart]="revenueChart()" />
     </app-card>

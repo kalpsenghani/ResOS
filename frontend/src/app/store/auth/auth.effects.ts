@@ -68,5 +68,9 @@ export class AuthEffects {
 }
 
 function extractError(error: { error?: ApiError; message?: string }): string {
-  return error.error?.error?.message ?? error.message ?? 'An unexpected error occurred';
+  const apiError = error.error?.error;
+  if (apiError?.details?.length) {
+    return apiError.details.join('; ');
+  }
+  return apiError?.message ?? error.message ?? 'An unexpected error occurred';
 }

@@ -1,0 +1,204 @@
+// Glassmorphism inputs — uses Material's native notched outline so the floating
+// label notches cleanly (no overlap). We only restyle colors + add a glass fill.
+// NEVER change position/z-index of .mdc-notched-outline.
+
+:root {
+  --input-radius: 0.875rem;
+  --input-glass-fill: color-mix(in srgb, var(--surface-card) 86%, var(--brand-primary-subtle));
+  --input-border: color-mix(in srgb, var(--border-strong) 75%, transparent);
+  --mdc-outlined-text-field-container-shape: var(--input-radius);
+  --mdc-outlined-text-field-caret-color: var(--brand-primary);
+  --mat-form-field-focus-select-arrow-color: var(--brand-primary);
+}
+
+[data-theme='dark'] {
+  --input-glass-fill: color-mix(in srgb, var(--surface-elevated) 82%, var(--brand-primary-subtle));
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  display: block;
+}
+
+.mat-mdc-form-field.mat-form-field-appearance-outline {
+  /* Glass fill sits on the wrapper; the notched outline draws the border on top */
+  .mat-mdc-text-field-wrapper {
+    border-radius: var(--input-radius);
+    background: var(--input-glass-fill);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    box-shadow:
+      0 2px 10px rgba(13, 13, 15, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    transition: box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  /* Native notched outline = clean label notch + rounded corners */
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--input-border) !important;
+    border-width: 1.5px !important;
+  }
+
+  &:hover {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--border-strong) !important;
+    }
+  }
+
+  &.mat-focused {
+    .mat-mdc-text-field-wrapper {
+      background: color-mix(in srgb, var(--surface-card) 94%, var(--brand-primary-subtle));
+      box-shadow:
+        0 4px 16px rgba(13, 13, 15, 0.08),
+        0 0 0 4px var(--brand-primary-subtle),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--brand-primary) !important;
+      border-width: 2px !important;
+    }
+    .mat-mdc-floating-label {
+      color: var(--brand-primary);
+    }
+  }
+
+  &.mat-form-field-invalid {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--color-danger) !important;
+    }
+    .mat-mdc-floating-label {
+      color: var(--color-danger);
+    }
+  }
+
+  .mat-mdc-floating-label,
+  .mdc-text-field__input,
+  .mat-mdc-select-value-text {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Hint & error messages — friendly chip-style helper text
+--------------------------------------------------------------------------- */
+.mat-mdc-form-field-subscript-wrapper {
+  margin-top: 0.3rem;
+}
+
+.mat-mdc-form-field-hint-wrapper,
+.mat-mdc-form-field-error-wrapper {
+  padding: 0 0.25rem;
+}
+
+.mat-mdc-form-field-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.mat-mdc-form-field .mat-mdc-form-field-error {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-danger) !important;
+  letter-spacing: -0.005em;
+}
+
+/* Material uses .mat-mdc-form-field-bottom-align::before as a height spacer.
+   Repurpose it into a leading warning icon. */
+.mat-mdc-form-field-error.mat-mdc-form-field-bottom-align::before {
+  content: 'error' !important;
+  font-family: 'Material Icons';
+  font-size: 0.95rem;
+  font-weight: normal;
+  width: auto !important;
+  height: auto;
+  margin-right: 0.28rem;
+  vertical-align: -3px;
+  color: var(--color-danger);
+}
+
+/* ---------------------------------------------------------------------------
+   Native (non-Material) inputs using the .input class
+--------------------------------------------------------------------------- */
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  border-radius: var(--input-radius);
+  border: 1.5px solid var(--input-border);
+  background: var(--input-glass-fill);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  box-shadow: 0 2px 10px rgba(13, 13, 15, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:hover {
+  border-color: var(--border-strong);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px var(--brand-primary-subtle);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.field-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------------------
+   Autofill — keep it on-theme (Chrome paints its own background otherwise)
+--------------------------------------------------------------------------- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text-primary) !important;
+  caret-color: var(--text-primary);
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  transition: background-color 99999s ease-in-out 0s !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Dialog surface
+--------------------------------------------------------------------------- */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 1.25rem !important;
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: var(--shadow-lg) !important;
+}

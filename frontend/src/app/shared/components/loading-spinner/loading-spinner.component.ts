@@ -1,12 +1,10 @@
 import { Component, input } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-loading-spinner',
-  imports: [MatProgressSpinnerModule],
   template: `
     <div class="spinner" [class.spinner--overlay]="overlay()">
-      <mat-spinner [diameter]="size()" />
+      <span class="loader" [style.width.px]="size()" [style.height.px]="size()"></span>
       @if (message()) {
         <p>{{ message() }}</p>
       }
@@ -19,20 +17,30 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      padding: 2rem;
+      padding: 2.5rem;
       color: var(--text-muted);
     }
-
     .spinner--overlay {
       position: absolute;
       inset: 0;
-      background: color-mix(in srgb, var(--surface-bg) 80%, transparent);
+      background: color-mix(in srgb, var(--surface-bg) 75%, transparent);
+      backdrop-filter: blur(2px);
       z-index: 10;
     }
-
+    .loader {
+      display: inline-block;
+      border-radius: 999px;
+      border: 3px solid var(--brand-primary-subtle);
+      border-top-color: var(--brand-primary);
+      animation: loader-spin 0.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes loader-spin {
+      to { transform: rotate(360deg); }
+    }
     p {
       margin: 0;
-      font-size: 0.875rem;
+      font-size: 0.88rem;
+      font-weight: 500;
     }
   `,
 })

@@ -1,30 +1,49 @@
 <div class="dashboard-layout" [class.dashboard-layout--collapsed]="sidebarCollapsed()">
   <app-sidebar
-    [items]="navItems"
+    [groups]="navGroups"
     [collapsed]="sidebarCollapsed()"
     (toggleCollapsed)="toggleSidebar()"
   />
 
   <div class="dashboard-layout__main">
-    <header class="dashboard-header">
-      <div class="dashboard-header__info">
-        <h2>{{ tenantDetails()?.name ?? tenant()?.name ?? 'Restaurant' }}</h2>
-        <p>Welcome back, {{ user()?.firstName }}</p>
+    <header class="topbar">
+      <div class="topbar__info">
+        <span class="topbar__badge">
+          <span class="topbar__badge-dot"></span>
+          Live
+        </span>
+        <div class="topbar__title">
+          <h2>{{ restaurantName() }}</h2>
+          <p>Welcome back, {{ user()?.firstName }}</p>
+        </div>
       </div>
 
-      <div class="dashboard-header__actions">
-        <app-button variant="ghost" icon="dark_mode" (clicked)="theme.toggle()">
-          {{ theme.mode() === 'light' ? 'Dark' : 'Light' }}
-        </app-button>
-
-        <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User menu">
-          <mat-icon>account_circle</mat-icon>
+      <div class="topbar__actions">
+        <button
+          type="button"
+          class="topbar__icon-btn"
+          (click)="theme.toggle()"
+          [attr.aria-label]="theme.mode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+        >
+          <mat-icon>{{ theme.mode() === 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
         </button>
-        <mat-menu #userMenu="matMenu">
-          <button mat-menu-item disabled>
-            <mat-icon>person</mat-icon>
-            <span>{{ user()?.email }}</span>
-          </button>
+
+        <button type="button" class="user-chip" [matMenuTriggerFor]="userMenu" aria-label="User menu">
+          <span class="user-chip__avatar">{{ initials() }}</span>
+          <span class="user-chip__meta">
+            <span class="user-chip__name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
+            <span class="user-chip__role">{{ user()?.roles?.[0] }}</span>
+          </span>
+          <mat-icon class="user-chip__chevron">expand_more</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu" xPosition="before">
+          <div class="user-menu__header">
+            <span class="user-chip__avatar">{{ initials() }}</span>
+            <div>
+              <p class="user-menu__name">{{ user()?.firstName }} {{ user()?.lastName }}</p>
+              <p class="user-menu__email">{{ user()?.email }}</p>
+            </div>
+          </div>
           <button mat-menu-item (click)="logout()">
             <mat-icon>logout</mat-icon>
             <span>Sign out</span>

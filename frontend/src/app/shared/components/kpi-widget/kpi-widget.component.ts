@@ -8,11 +8,14 @@ import { KpiTrend } from '../../models/dashboard.model';
   imports: [MatIconModule, CurrencyPipe, DecimalPipe],
   template: `
     <article class="kpi">
-      <div class="kpi__header">
-        <span class="kpi__label">{{ label() }}</span>
-        @if (icon()) {
-          <mat-icon class="kpi__icon">{{ icon() }}</mat-icon>
-        }
+      <div class="kpi__top">
+        <span class="kpi__icon-wrap">
+          <mat-icon class="kpi__icon">{{ icon() || 'insights' }}</mat-icon>
+        </span>
+        <span class="kpi__trend" [class]="trendClass()">
+          <mat-icon>{{ trendIcon() }}</mat-icon>
+          {{ changeValue() }}
+        </span>
       </div>
       <p class="kpi__value">
         @if (format() === 'currency') {
@@ -21,73 +24,89 @@ import { KpiTrend } from '../../models/dashboard.model';
           {{ value() | number: '1.0-0' }}
         }
       </p>
-      <div class="kpi__trend" [class]="trendClass()">
-        <mat-icon>{{ trendIcon() }}</mat-icon>
-        <span>{{ changeLabel() }}</span>
-      </div>
+      <span class="kpi__label">{{ label() }}</span>
     </article>
   `,
   styles: `
     .kpi {
+      position: relative;
       background: var(--surface-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
+      border-radius: 1.25rem;
+      padding: 1.35rem;
       box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
     }
+    .kpi::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-primary), var(--accent));
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .kpi:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: var(--border-strong);
+    }
+    .kpi:hover::before { opacity: 1; }
 
-    .kpi__header {
+    .kpi__top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
-
-    .kpi__label {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      font-weight: 500;
+    .kpi__icon-wrap {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.85rem;
+      background: var(--brand-primary-subtle);
     }
-
     .kpi__icon {
       color: var(--brand-primary);
-      font-size: 1.25rem;
-      width: 1.25rem;
-      height: 1.25rem;
+      font-size: 1.3rem;
+      width: 1.3rem;
+      height: 1.3rem;
     }
-
-    .kpi__value {
-      margin: 0;
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-    }
-
     .kpi__trend {
       display: inline-flex;
       align-items: center;
-      gap: 0.25rem;
-      margin-top: 0.75rem;
-      font-size: 0.8125rem;
-      font-weight: 500;
+      gap: 0.15rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
     }
-
     .kpi__trend mat-icon {
-      font-size: 1rem;
-      width: 1rem;
-      height: 1rem;
+      font-size: 0.95rem;
+      width: 0.95rem;
+      height: 0.95rem;
     }
+    .kpi__trend--up { color: var(--color-success); background: var(--color-success-subtle); }
+    .kpi__trend--down { color: var(--color-danger); background: var(--color-danger-subtle); }
+    .kpi__trend--flat { color: var(--text-muted); background: var(--surface-hover); }
 
-    .kpi__trend--up {
-      color: var(--color-success);
+    .kpi__value {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1.1;
     }
-
-    .kpi__trend--down {
-      color: var(--color-danger);
-    }
-
-    .kpi__trend--flat {
+    .kpi__label {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.85rem;
+      font-weight: 500;
       color: var(--text-muted);
     }
   `,
@@ -114,9 +133,9 @@ export class KpiWidgetComponent {
     return 'trending_flat';
   });
 
-  readonly changeLabel = computed(() => {
+  readonly changeValue = computed(() => {
     const change = this.change();
     const prefix = change > 0 ? '+' : '';
-    return `${prefix}${change.toFixed(1)}% vs last period`;
+    return `${prefix}${change.toFixed(1)}%`;
   });
 }

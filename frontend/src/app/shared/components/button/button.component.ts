@@ -1,90 +1,73 @@
-import { Component, input, output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, computed, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'dark';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 @Component({
   selector: 'app-button',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatIconModule],
   template: `
-    @if (variant() === 'primary') {
-      <button
-        mat-flat-button
-        [type]="type()"
-        [disabled]="disabled()"
-        [class.full-width]="fullWidth()"
-        (click)="clicked.emit($event)"
-      >
-        @if (icon()) {
-          <mat-icon>{{ icon() }}</mat-icon>
-        }
-        <ng-content />
-      </button>
-    } @else if (variant() === 'danger') {
-      <button
-        mat-flat-button
-        color="warn"
-        [type]="type()"
-        [disabled]="disabled()"
-        [class.full-width]="fullWidth()"
-        (click)="clicked.emit($event)"
-      >
-        @if (icon()) {
-          <mat-icon>{{ icon() }}</mat-icon>
-        }
-        <ng-content />
-      </button>
-    } @else if (variant() === 'secondary') {
-      <button
-        mat-stroked-button
-        [type]="type()"
-        [disabled]="disabled()"
-        [class.full-width]="fullWidth()"
-        (click)="clicked.emit($event)"
-      >
-        @if (icon()) {
-          <mat-icon>{{ icon() }}</mat-icon>
-        }
-        <ng-content />
-      </button>
-    } @else {
-      <button
-        mat-button
-        [type]="type()"
-        [disabled]="disabled()"
-        [class.full-width]="fullWidth()"
-        (click)="clicked.emit($event)"
-      >
-        @if (icon()) {
-          <mat-icon>{{ icon() }}</mat-icon>
-        }
-        <ng-content />
-      </button>
-    }
+    <button
+      [type]="type()"
+      [disabled]="disabled() || loading()"
+      [class]="classes()"
+      (click)="clicked.emit($event)"
+    >
+      @if (loading()) {
+        <span class="btn-spinner" aria-hidden="true"></span>
+      } @else if (icon()) {
+        <mat-icon class="btn-glyph">{{ icon() }}</mat-icon>
+      }
+      <ng-content />
+    </button>
   `,
   styles: `
     :host {
       display: inline-block;
     }
-
-    button.full-width {
+    button {
       width: 100%;
     }
-
-    mat-icon {
-      margin-right: 0.375rem;
-      font-size: 1.125rem;
-      width: 1.125rem;
-      height: 1.125rem;
+    .btn-glyph {
+      font-size: 1.15rem;
+      width: 1.15rem;
+      height: 1.15rem;
+    }
+    .btn-spinner {
+      width: 1.05rem;
+      height: 1.05rem;
+      border-radius: 999px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      animation: btn-spin 0.6s linear infinite;
+    }
+    @keyframes btn-spin {
+      to { transform: rotate(360deg); }
     }
   `,
 })
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
+  readonly size = input<ButtonSize>('md');
   readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly disabled = input(false);
+  readonly loading = input(false);
   readonly fullWidth = input(false);
   readonly icon = input<string | undefined>(undefined);
   readonly clicked = output<MouseEvent>();
+
+  readonly classes = computed(() => {
+    const map: Record<ButtonVariant, string> = {
+      primary: 'btn-primary',
+      secondary: 'btn-secondary',
+      ghost: 'btn-ghost',
+      danger: 'btn-danger',
+      dark: 'btn-dark',
+    };
+    const sizes: Record<ButtonSize, string> = { sm: 'btn-sm', md: '', lg: 'btn-lg' };
+    return ['btn', map[this.variant()], sizes[this.size()], this.fullWidth() ? 'w-full' : '']
+      .filter(Boolean)
+      .join(' ');
+  });
 }

@@ -4,13 +4,13 @@ import { Component, input } from '@angular/core';
   selector: 'app-page-header',
   template: `
     <header class="page-header">
-      <div>
+      <div class="page-header__lead">
         @if (breadcrumbs().length) {
           <nav class="breadcrumbs" aria-label="Breadcrumb">
             @for (crumb of breadcrumbs(); track crumb; let last = $last) {
               <span [class.active]="last">{{ crumb }}</span>
               @if (!last) {
-                <span class="separator">/</span>
+                <span class="separator">›</span>
               }
             }
           </nav>
@@ -28,43 +28,48 @@ import { Component, input } from '@angular/core';
   styles: `
     .page-header {
       display: flex;
-      align-items: flex-start;
+      align-items: flex-end;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
+      animation: ph-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
-
+    @keyframes ph-in {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .breadcrumbs {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.8125rem;
+      gap: 0.45rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 600;
       color: var(--text-muted);
     }
-
-    .breadcrumbs .active {
-      color: var(--text-primary);
-    }
-
-    .separator {
-      opacity: 0.5;
-    }
-
+    .breadcrumbs .active { color: var(--brand-primary); }
+    .separator { opacity: 0.5; }
     h1 {
       margin: 0;
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.035em;
     }
-
     p {
-      margin: 0.375rem 0 0;
+      margin: 0.4rem 0 0;
       color: var(--text-muted);
+      font-size: 0.95rem;
     }
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .actions:empty { display: none; }
 
-    .actions:empty {
-      display: none;
+    @media (max-width: 640px) {
+      .page-header { flex-direction: column; align-items: flex-start; }
+      h1 { font-size: 1.5rem; }
     }
   `,
 })

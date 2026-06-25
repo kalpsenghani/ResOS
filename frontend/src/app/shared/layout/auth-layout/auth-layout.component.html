@@ -1,19 +1,58 @@
-<div class="auth-layout">
-  <header class="auth-header">
-    <div class="brand">
-      <span class="brand-mark">R</span>
-      <span class="brand-name">ResOS</span>
+<div class="auth-shell">
+  <aside class="auth-brand">
+    <div class="auth-brand__glow auth-brand__glow--1"></div>
+    <div class="auth-brand__glow auth-brand__glow--2"></div>
+
+    <div class="auth-brand__top">
+      <div class="brand">
+        <span class="brand-mark">R</span>
+        <span class="brand-name">ResOS</span>
+      </div>
     </div>
-    <button mat-icon-button type="button" (click)="theme.toggle()" aria-label="Toggle theme">
-      <mat-icon>{{ theme.mode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
-    </button>
-  </header>
 
-  <main class="auth-content">
-    <router-outlet />
+    <div class="auth-brand__body">
+      <h1>The operating system for modern restaurants.</h1>
+      <p class="auth-brand__lede">
+        Orders, reservations, inventory and analytics — beautifully fast, all in one place.
+      </p>
+
+      <ul class="auth-brand__features">
+        @for (item of highlights; track item.title) {
+          <li>
+            <span class="feature-icon"><mat-icon>{{ item.icon }}</mat-icon></span>
+            <span class="feature-text">
+              <strong>{{ item.title }}</strong>
+              <span>{{ item.copy }}</span>
+            </span>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="auth-brand__foot">
+      <span class="stars">★★★★★</span>
+      <p>“ResOS cut our service chaos in half.” — Independent bistro owner</p>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <header class="auth-main__top">
+      <div class="brand brand--compact">
+        <span class="brand-mark">R</span>
+        <span class="brand-name">ResOS</span>
+      </div>
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="theme.toggle()"
+        aria-label="Toggle theme"
+      >
+        <mat-icon>{{ theme.mode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+    </header>
+
+    <div class="auth-main__content">
+      <router-outlet />
+    </div>
   </main>
-
-  <footer class="auth-footer">
-    <p>Restaurant management, simplified.</p>
-  </footer>
 </div>

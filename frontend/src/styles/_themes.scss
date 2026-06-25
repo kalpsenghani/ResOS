@@ -1,52 +1,102 @@
+// ResOS design tokens — "Uber × DoorDash"
+// Uber: high-contrast black/white structure, generous whitespace, bold type.
+// DoorDash: vibrant red-orange energy, rounded surfaces, friendly warmth.
+
 :root,
 [data-theme='light'] {
-  --brand-primary: #2563eb;
-  --brand-primary-hover: #1d4ed8;
-  --brand-primary-subtle: #dbeafe;
-  --surface-bg: #f8fafc;
+  // Brand — DoorDash-style vivid red-orange
+  --brand-primary: #ef2d2d;
+  --brand-primary-hover: #d81f1f;
+  --brand-primary-active: #b91818;
+  --brand-primary-subtle: #ffe9e7;
+  --brand-on-primary: #ffffff;
+
+  // Secondary accent — warm DoorDash orange
+  --accent: #ff6a3d;
+  --accent-subtle: #fff0ea;
+
+  // Surfaces — Uber clean neutrals with a faint warm cast
+  --surface-bg: #f6f6f7;
   --surface-card: #ffffff;
   --surface-elevated: #ffffff;
-  --surface-sidebar: #ffffff;
-  --text-primary: #0f172a;
-  --text-muted: #64748b;
+  --surface-sidebar: #0d0d0f;
+  --surface-hover: #f1f1f2;
+
+  // Ink
+  --text-primary: #0d0d0f;
+  --text-muted: #6b6b73;
   --text-inverse: #ffffff;
-  --border-subtle: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --color-success: #16a34a;
-  --color-success-subtle: #dcfce7;
-  --color-warning: #d97706;
-  --color-warning-subtle: #fef3c7;
-  --color-danger: #dc2626;
-  --color-danger-subtle: #fee2e2;
-  --color-info: #0284c7;
-  --color-info-subtle: #e0f2fe;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 10px 40px rgba(15, 23, 42, 0.08);
+
+  // Borders
+  --border-subtle: #ececed;
+  --border-strong: #d9d9dc;
+
+  // Status
+  --color-success: #1f9d55;
+  --color-success-subtle: #e4f7ec;
+  --color-warning: #c77700;
+  --color-warning-subtle: #fff2dc;
+  --color-danger: #e02424;
+  --color-danger-subtle: #fdeaea;
+  --color-info: #1f6feb;
+  --color-info-subtle: #e7f0ff;
+
+  // Sidebar (always dark for the Uber control-room feel)
+  --sidebar-text: #a8a8b3;
+  --sidebar-text-active: #ffffff;
+  --sidebar-active-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+
+  // Elevation
+  --shadow-xs: 0 1px 2px rgba(13, 13, 15, 0.06);
+  --shadow-sm: 0 1px 3px rgba(13, 13, 15, 0.08), 0 1px 2px rgba(13, 13, 15, 0.04);
+  --shadow-md: 0 4px 16px rgba(13, 13, 15, 0.08);
+  --shadow-lg: 0 18px 50px rgba(13, 13, 15, 0.12);
+  --shadow-glow: 0 8px 24px rgba(239, 45, 45, 0.32);
 }
 
 [data-theme='dark'] {
-  --brand-primary: #3b82f6;
-  --brand-primary-hover: #60a5fa;
-  --brand-primary-subtle: #1e3a5f;
-  --surface-bg: #0b1220;
-  --surface-card: #111827;
-  --surface-elevated: #1f2937;
-  --surface-sidebar: #0f172a;
-  --text-primary: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-inverse: #0f172a;
-  --border-subtle: #1f2937;
-  --border-strong: #374151;
-  --color-success: #4ade80;
-  --color-success-subtle: #14532d;
-  --color-warning: #fbbf24;
-  --color-warning-subtle: #78350f;
-  --color-danger: #f87171;
-  --color-danger-subtle: #7f1d1d;
-  --color-info: #38bdf8;
-  --color-info-subtle: #0c4a6e;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --brand-primary: #ff4d4d;
+  --brand-primary-hover: #ff6363;
+  --brand-primary-active: #ff7a7a;
+  --brand-primary-subtle: #3a1414;
+  --brand-on-primary: #ffffff;
+
+  --accent: #ff7a4d;
+  --accent-subtle: #3a1e12;
+
+  --surface-bg: #08080a;
+  --surface-card: #131316;
+  --surface-elevated: #1b1b20;
+  --surface-sidebar: #0a0a0c;
+  --surface-hover: #1d1d22;
+
+  --text-primary: #f7f7f8;
+  --text-muted: #9a9aa3;
+  --text-inverse: #0d0d0f;
+
+  --border-subtle: #232328;
+  --border-strong: #34343b;
+
+  --color-success: #34d27b;
+  --color-success-subtle: #10301f;
+  --color-warning: #f5b53d;
+  --color-warning-subtle: #3a2a0d;
+  --color-danger: #ff5c5c;
+  --color-danger-subtle: #3a1414;
+  --color-info: #4d94ff;
+  --color-info-subtle: #112844;
+
+  --sidebar-text: #8a8a94;
+  --sidebar-text-active: #ffffff;
+  --sidebar-active-bg: rgba(255, 255, 255, 0.10);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 8px 28px rgba(255, 77, 77, 0.4);
 }

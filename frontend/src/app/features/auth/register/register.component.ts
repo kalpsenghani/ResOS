@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -22,7 +22,7 @@ import { authFeature } from '../../../store/auth/auth.reducer';
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly store = inject(Store);
 
@@ -39,6 +39,21 @@ export class RegisterComponent {
     phone: [''],
   });
 
+  private slugManuallyEdited = false;
+
+  ngOnInit(): void {
+    this.form.controls.tenantName.valueChanges.subscribe((name) => {
+      if (this.slugManuallyEdited) {
+        return;
+      }
+      this.form.controls.tenantSlug.setValue(slugify(name), { emitEvent: false });
+    });
+  }
+
+  onSlugInput(): void {
+    this.slugManuallyEdited = true;
+  }
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -46,4 +61,13 @@ export class RegisterComponent {
     }
     this.store.dispatch(AuthActions.register({ request: this.form.getRawValue() }));
   }
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-{2,}/g, '-');
 }

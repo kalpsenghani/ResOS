@@ -49,37 +49,52 @@ export interface DataTableColumn<T> {
   styles: `
     .table-wrap {
       overflow-x: auto;
+      border-radius: 0.85rem;
     }
 
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.875rem;
+      font-size: 0.88rem;
     }
 
     th,
     td {
-      padding: 0.875rem 1rem;
+      padding: 0.85rem 1rem;
       text-align: left;
-      border-bottom: 1px solid var(--border-subtle);
     }
 
-    th {
+    thead th {
+      position: sticky;
+      top: 0;
       color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.75rem;
+      font-weight: 700;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
+      background: var(--surface-hover);
+    }
+    thead th:first-child { border-top-left-radius: 0.75rem; }
+    thead th:last-child { border-top-right-radius: 0.75rem; }
+
+    tbody td {
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-weight: 500;
     }
 
-    tbody tr:hover {
-      background: var(--brand-primary-subtle);
+    tbody tr {
+      transition: background-color 0.15s ease;
     }
+    tbody tr:hover {
+      background: var(--surface-hover);
+    }
+    tbody tr:last-child td { border-bottom: 0; }
 
     .empty-cell {
       text-align: center;
       color: var(--text-muted);
-      padding: 2rem 1rem;
+      padding: 2.5rem 1rem;
     }
   `,
 })

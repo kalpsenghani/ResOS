@@ -32,7 +32,7 @@ resos:
     refresh-cookie-name: refreshToken
     refresh-cookie-path: /api/v1/auth
   cors:
-    allowed-origins: http://localhost:4200
+    allowed-origins: http://localhost:4200,http://127.0.0.1:4200
 
 management:
   endpoints:

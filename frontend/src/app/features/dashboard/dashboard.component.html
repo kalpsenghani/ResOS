@@ -57,11 +57,11 @@
   </section>
 
   <section class="dashboard-grid">
-    <app-card title="Revenue trend" subtitle="Last 7 days">
+    <app-card eyebrow="Performance" title="Revenue trend" subtitle="Last 7 days">
       <app-revenue-chart [chart]="revenueChart()" />
     </app-card>
 
-    <app-card title="Recent orders" subtitle="Latest activity">
+    <app-card eyebrow="Live feed" title="Recent orders" subtitle="Latest activity">
       @if (recentOrders().length) {
         <app-data-table [columns]="orderColumns" [rows]="$any(recentOrders())" />
       } @else {
